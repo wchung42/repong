@@ -13,15 +13,15 @@ Computer::~Computer() {}
 void Computer::update(std::unique_ptr<Ball>& ball, float deltaTime)
 {
 	// Follows the ball
-	raylib::Vector2 ballPos = ball->getPos();
-	if (m_pos.GetY() + (m_height / 2) < ballPos.GetY() &&
-		m_pos.GetY() + m_height < GetScreenHeight())
+	if (ball->getVelocity().GetX() > 0.0f)
 	{
-		m_pos.y += m_velocity * deltaTime;
+		raylib::Vector2 ballPos = ball->getPos();
+		if (m_pos.GetY() + (m_height / 2) > ballPos.GetY())
+			m_pos.y -= m_velocity * deltaTime;
+
+		if (m_pos.GetY() + (m_height / 2) <= ballPos.GetY())
+			m_pos.y += m_velocity * deltaTime;
 	}
-	else if (m_pos.GetY() + (m_height / 2) > ballPos.GetY() &&
-		m_pos.GetY() > 0.0f)
-	{
-		m_pos.y -= m_velocity * deltaTime;
-	}
+
+	Paddle::update(deltaTime);
 }

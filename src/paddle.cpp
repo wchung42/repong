@@ -11,7 +11,10 @@ Paddle::~Paddle() {}
 
 void Paddle::update(float deltaTime)
 {
-
+	if (m_pos.GetY() < 0.0f)
+		m_pos.y = 0.0f;
+	else if (m_pos.GetY() + m_height > GetScreenHeight())
+		m_pos.y = GetScreenHeight() - m_height;
 }
 
 void Paddle::draw()

@@ -49,7 +49,8 @@ void Ball::onCollisionPaddles(raylib::Vector2 paddlePos, int paddleHeight)
 	// Calculate new bounce angle
 	float maxBounceAngle = (5.0f * M_PI) / 12.0f;
 	float newBounceAngle = normalizedRelativeIntersectionY * maxBounceAngle;
-	float newBallVx = m_speed * std::cos(newBounceAngle);
+	float direction = m_velocity.GetX() < 0.0f ? 1.0f : -1.0f;
+	float newBallVx = m_speed * direction * std::cos(newBounceAngle);
 	float newBallVy = m_speed * -std::sin(newBounceAngle);
 	m_velocity = raylib::Vector2 {newBallVx, newBallVy};
 }

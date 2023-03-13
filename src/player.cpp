@@ -12,10 +12,11 @@ Player::~Player() {}
 
 void Player::update(float deltaTime)
 {
-	if ((IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) && m_pos.y >= 0)
+	if ((IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)))
 		m_pos.y -= m_velocity * deltaTime;
 	
-	if ((IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)) && m_pos.y <= GetScreenHeight() - m_height)
+	if ((IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)))
 		m_pos.y += m_velocity * deltaTime;
 
+	Paddle::update(deltaTime);
 }

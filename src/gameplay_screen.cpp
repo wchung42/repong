@@ -58,7 +58,7 @@ void GameplayScreen::UpdateScreen()
     if (CheckCollisionCircleRec(m_ball->getPos(), m_ball->getRadius(), m_computer->getCollisionRec()))
     {
         if (m_ball->getVelocity().GetX() > 0)
-            m_ball->changeXVelocityDirection();
+            m_ball->onCollisionPaddles(m_computer->getPos(), m_computer->getHeight());
     }
 }
 
