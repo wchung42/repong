@@ -1,31 +1,19 @@
-#include "raylib.h"
-#include "./include/raylib-cpp.hpp"
 #include "screen.hpp"
 
 Screen::Screen() {}
 
-Screen::~Screen() {}
-
-void Screen::InitScreen()
+Screen::~Screen() 
 {
-	// Initialize screen
-
-	// TODO: Load textures
-
+	// Unload resources
 }
 
-void Screen::UpdateScreen()
+void Screen::updateScreen()
 {
 	// Update screen
 }
 
-void Screen::DrawScreen()
+void Screen::drawScreen()
 {
 	// Draw screen
-}
-
-void Screen::UnloadScreen()
-{
-	// Unload screen variables
 }
 

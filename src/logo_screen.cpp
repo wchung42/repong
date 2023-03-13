@@ -1,5 +1,3 @@
-#include "raylib.h"
-#include "./include/raylib-cpp.hpp"
 #include "screen.hpp"
 #include "logo_screen.hpp"
 
@@ -7,10 +5,9 @@
 // Logo Screen Functions Definition
 //----------------------------------------------------------------------------------
 
-// Logo Screen Initialization logic
-void LogoScreen::InitScreen()
+LogoScreen::LogoScreen()
 {
-    m_finishScreen = 0;
+    m_nextScreen = 0;
     m_framesCounter = 0;
     m_lettersCount = 0;
 
@@ -26,8 +23,13 @@ void LogoScreen::InitScreen()
     m_alpha = 1.0f;
 }
 
+LogoScreen::~LogoScreen()
+{
+    // Unload resources
+}
+
 // Logo Screen Update logic
-void LogoScreen::UpdateScreen()
+void LogoScreen::updateScreen()
 {
     if (m_state == 0)                 // State 0: Top-left square corner blink logic
     {
@@ -74,17 +76,15 @@ void LogoScreen::UpdateScreen()
                 if (m_alpha <= 0.0f)
                 {
                     m_alpha = 0.0f;
-                    m_finishScreen = 1;   // Jump to next screen
+                    m_nextScreen = 1;   // Jump to next screen
                 }
             }
         }
     }
 }
 
-
-
 // Logo Screen Draw logic
-void LogoScreen::DrawScreen(void)
+void LogoScreen::drawScreen()
 {
     if (m_state == 0)         // Draw blinking top-left square corner
     {
@@ -120,10 +120,4 @@ void LogoScreen::DrawScreen(void)
 
         if (m_framesCounter > 20) DrawText("powered by", m_logoPositionX, m_logoPositionY - 27, 20, Fade(DARKGRAY, m_alpha));
     }
-}
-
-// Logo Screen Unload logic
-void LogoScreen::UnloadScreen(void)
-{
-    // Unload LOGO screen variables here!
 }

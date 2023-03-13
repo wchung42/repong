@@ -7,73 +7,36 @@
 // Gameplay Screen Functions Definition
 //----------------------------------------------------------------------------------
 
-// Gameplay Screen Initialization logic
-void GameplayScreen::InitScreen()
+GameplayScreen::GameplayScreen()
 {
+    m_currentField = DEFAULT;
     m_player = std::make_unique<Player>();
     m_computer = std::make_unique<Computer>();
     m_ball = std::make_unique<Ball>();
+    m_field = std::make_unique<Field>(m_player, m_computer, m_ball);
 }
 
+GameplayScreen::~GameplayScreen() 
+{
+    // Unload resources
+}
+
+
 // Gameplay Screen Update logic
-void GameplayScreen::UpdateScreen()
+void GameplayScreen::updateScreen()
 {
     float deltaTime {GetFrameTime()};
-    m_player->update(deltaTime);
-    m_computer->update(m_ball, deltaTime);
-    m_ball->update(deltaTime);
+    m_field->update(deltaTime);
 
-    //////////////////////
-    // Handle collisions
-    //////////////////////
-    
-    // Ball collision with top and bottom walls
-    if ((m_ball->getPos().GetY() + m_ball->getRadius() >= GetScreenHeight()) ||
-        (m_ball->getPos().GetY() - m_ball->getRadius() <= 0))
-    {
-        m_ball->changeYVelocityDirection();
-    }
-
-    // Ball collision with left and right walls
-    if (m_ball->getPos().GetX() + m_ball->getRadius() >= GetScreenWidth())
-    {
-        std::cout << "player score" << '\n';
-        m_ball->reset();
-    }
-    else if (m_ball->getPos().GetX() - m_ball->getRadius() <= 0)
-    {
-        std::cout << "Computer score" << '\n';
-        m_ball->reset();
-    }
-
-    // Ball collision with paddles
-    if (CheckCollisionCircleRec(m_ball->getPos(), m_ball->getRadius(), m_player->getCollisionRec()))
-    {
-        if (m_ball->getVelocity().GetX() < 0)
-        {
-            m_ball->onCollisionPaddles(m_player->getPos(), m_player->getHeight());
-        }
-    };
-
-    if (CheckCollisionCircleRec(m_ball->getPos(), m_ball->getRadius(), m_computer->getCollisionRec()))
-    {
-        if (m_ball->getVelocity().GetX() > 0)
-            m_ball->onCollisionPaddles(m_computer->getPos(), m_computer->getHeight());
-    }
 }
 
 // Gameplay Screen Draw logic
-void GameplayScreen::DrawScreen()
+void GameplayScreen::drawScreen()
 {
     //DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), RAYWHITE);
-    m_player->draw();
+    /*m_player->draw();
     m_computer->draw();
-    m_ball->draw();
+    m_ball->draw();*/
+    m_field->draw();
 
-}
-
-// Gameplay Screen Unload logic
-void GameplayScreen::UnloadScreen()
-{
-    // TODO: Unload GAMEPLAY screen variables here!
 }

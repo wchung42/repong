@@ -7,16 +7,18 @@
 // Title Screen Functions Definition
 //----------------------------------------------------------------------------------
 
-// Title Screen Initialization logic
-void TitleScreen::InitScreen()
+TitleScreen::TitleScreen()
 {
-    // TODO: Initialize TITLE screen variables here!
-    m_framesCounter = 0;
-    m_finishScreen = 0;
+
+}
+
+TitleScreen::~TitleScreen()
+{
+
 }
 
 // Title Screen Update logic
-void TitleScreen::UpdateScreen()
+void TitleScreen::updateScreen()
 {
     // TODO: Update TITLE screen variables here!
 
@@ -24,12 +26,12 @@ void TitleScreen::UpdateScreen()
     if (IsKeyPressed(KEY_ENTER) || IsGestureDetected(GESTURE_TAP))
     {
         //finishScreen = 1;   // OPTIONS
-        m_finishScreen = 2;   // GAMEPLAY
+        m_nextScreen = 2;   // GAMEPLAY
     }
 }
 
 // Title Screen Draw logic
-void TitleScreen::DrawScreen()
+void TitleScreen::drawScreen()
 {
     // TODO: Draw TITLE screen here!
     DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), GREEN);
@@ -37,10 +39,4 @@ void TitleScreen::DrawScreen()
     raylib::DrawText("TITLE SCREEN", titlePosition.GetX(), titlePosition.GetY(), 20, DARKGREEN);
     raylib::Vector2 instructionPosition = {120, 220};
     raylib::DrawText("PRESS ENTER or TAP to JUMP to GAMEPLAY SCREEN", instructionPosition.GetX(), instructionPosition.GetY(), 30, DARKGREEN);
-}
-
-// Title Screen Unload logic
-void TitleScreen::UnloadScreen(void)
-{
-    // TODO: Unload TITLE screen variables here!
 }

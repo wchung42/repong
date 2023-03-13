@@ -150,6 +150,7 @@
   <ItemGroup>
     <ClCompile Include="src\ball.cpp" />
     <ClCompile Include="src\computer.cpp" />
+    <ClCompile Include="src\field.cpp" />
     <ClCompile Include="src\paddle.cpp" />
     <ClCompile Include="src\game.cpp" />
     <ClCompile Include="src\ending_screen.cpp" />
@@ -164,6 +165,7 @@
   <ItemGroup>
     <ClInclude Include="src\ball.hpp" />
     <ClInclude Include="src\computer.hpp" />
+    <ClInclude Include="src\field.hpp" />
     <ClInclude Include="src\paddle.hpp" />
     <ClInclude Include="src\ending_screen.hpp" />
     <ClInclude Include="src\game.hpp" />

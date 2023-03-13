@@ -7,9 +7,9 @@
 int main()
 {
     Game game;
-    game.Initialize();
-    game.RunLoop();
-    game.Shutdown();
+    game.initialize();
+    game.runLoop();
+    game.shutdown();
 
     return 0;
 }

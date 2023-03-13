@@ -1,7 +1,7 @@
 #pragma once
 
 #include "raylib.h"
-#include "./include/raylib-cpp.hpp"
+#include "include/raylib-cpp.hpp"
 
 //----------------------------------------------------------------------------------
 // Types and Structures Definition
@@ -12,15 +12,13 @@ class Screen
 {
 protected:
 	int m_framesCounter {};
-	int m_finishScreen {};
+	int m_nextScreen {};
 public:
 	Screen();
-	~Screen();
-	virtual void InitScreen();
-	virtual void UpdateScreen();
-	virtual void DrawScreen();
-	virtual void UnloadScreen();
+	virtual ~Screen();
+	virtual void updateScreen();
+	virtual void drawScreen();
 
-	int GetFinishScreen() const { return m_finishScreen; } // Return the next screen
+	int getNextScreen() const { return m_nextScreen; } // Return the next screen
 
 };

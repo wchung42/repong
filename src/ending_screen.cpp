@@ -7,29 +7,31 @@
 // Ending Screen Functions Definition
 //----------------------------------------------------------------------------------
 
-// Ending Screen Initialization logic
-void EndingScreen::InitScreen()
+EndingScreen::EndingScreen()
 {
-    // TODO: Initialize ENDING screen variables here!
-    m_framesCounter = 0;
-    m_finishScreen = 0;
+
+}
+
+EndingScreen::~EndingScreen()
+{
+    // Unload resources
 }
 
 // Ending Screen Update logic
-void EndingScreen::UpdateScreen()
+void EndingScreen::updateScreen()
 {
     // TODO: Update ENDING screen variables here!
 
     // Press enter or tap to return to TITLE screen
     if (IsKeyPressed(KEY_ENTER) || IsGestureDetected(GESTURE_TAP))
     {
-        m_finishScreen = 1;
+        m_nextScreen = 1;
         //PlaySound(fxCoin);
     }
 }
 
 // Ending Screen Draw logic
-void EndingScreen::DrawScreen()
+void EndingScreen::drawScreen()
 {
     // TODO: Draw ENDING screen here!
     DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), BLUE);
@@ -37,10 +39,4 @@ void EndingScreen::DrawScreen()
     raylib::DrawText("ENDING SCREEN", titlePosition.GetX(), titlePosition.GetY(), 20, DARKBLUE);
     raylib::Vector2 instructionPosition {120, 220};
     raylib::DrawText("PRESS ENTER or TAP to RETURN to TITLE SCREEN", instructionPosition.GetX(), instructionPosition.GetY(), 30, DARKBLUE);
-}
-
-// Ending Screen Unload logic
-void EndingScreen::UnloadScreen()
-{
-    // TODO: Unload ENDING screen variables here!
 }

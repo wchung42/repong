@@ -1,5 +1,3 @@
-#include "raylib.h"
-#include "./include/raylib-cpp.hpp"
 #include "screen.hpp"
 #include "options_screen.hpp"
 
@@ -7,28 +5,24 @@
 // Options Screen Functions Definition
 //----------------------------------------------------------------------------------
 
-// Options Screen Initialization logic
-void OptionsScreen::InitScreen()
+OptionsScreen::OptionsScreen()
 {
-    // TODO: Initialize OPTIONS screen variables here!
-    m_framesCounter = 0;
-    m_finishScreen = 0;
+
+}
+
+OptionsScreen::~OptionsScreen()
+{
+
 }
 
 // Options Screen Update logic
-void OptionsScreen::UpdateScreen()
+void OptionsScreen::updateScreen()
 {
     // TODO: Update OPTIONS screen variables here!
 }
 
 // Options Screen Draw logic
-void OptionsScreen::DrawScreen()
+void OptionsScreen::drawScreen()
 {
     // TODO: Draw OPTIONS screen here!
-}
-
-// Options Screen Unload logic
-void OptionsScreen::UnloadScreen()
-{
-    // TODO: Unload OPTIONS screen variables here!
 }

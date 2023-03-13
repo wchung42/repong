@@ -25,6 +25,7 @@ Ball::~Ball() {}
 
 void Ball::update(float deltaTime)
 {
+	std::cout << "ball updating" << '\n';
 	m_pos += m_velocity * deltaTime;
 }
 
