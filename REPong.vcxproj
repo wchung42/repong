@@ -93,6 +93,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -107,6 +108,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -121,6 +123,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -135,6 +138,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -144,16 +148,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\ball.cpp" />
+    <ClCompile Include="src\computer.cpp" />
+    <ClCompile Include="src\paddle.cpp" />
     <ClCompile Include="src\game.cpp" />
     <ClCompile Include="src\ending_screen.cpp" />
     <ClCompile Include="src\gameplay_screen.cpp" />
     <ClCompile Include="src\logo_screen.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\options_screen.cpp" />
+    <ClCompile Include="src\player.cpp" />
     <ClCompile Include="src\screen.cpp" />
     <ClCompile Include="src\title_screen.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\ball.hpp" />
+    <ClInclude Include="src\computer.hpp" />
+    <ClInclude Include="src\paddle.hpp" />
     <ClInclude Include="src\ending_screen.hpp" />
     <ClInclude Include="src\game.hpp" />
     <ClInclude Include="src\gameplay_screen.hpp" />
@@ -196,6 +207,7 @@
     <ClInclude Include="src\include\Wave.hpp" />
     <ClInclude Include="src\include\Window.hpp" />
     <ClInclude Include="src\options_screen.hpp" />
+    <ClInclude Include="src\player.hpp" />
     <ClInclude Include="src\screen.hpp" />
     <ClInclude Include="src\logo_screen.hpp" />
     <ClInclude Include="src\title_screen.hpp" />

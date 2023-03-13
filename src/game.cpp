@@ -21,8 +21,8 @@ void Game::Initialize()
 	m_window.raylib::Window::Init(m_windowWidth, m_windowHeight, m_title);
 	
     // Setup and init first screen
-    m_currentScreen = LOGO;
-    m_screen = std::make_unique<LogoScreen>();
+    m_currentScreen = GAMEPLAY;
+    m_screen = std::make_unique<GameplayScreen>();
     m_screen->InitScreen();
 
     m_window.SetTargetFPS(m_targetFPS);       // Set our game to run at 60 frames-per-second
