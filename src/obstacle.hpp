@@ -9,6 +9,7 @@ private:
 	raylib::Vector2 m_pos {};
 	raylib::Vector2 m_size {};
 	int m_health {};
+	raylib::Color m_color;
 public:
 	Obstacle(
 		raylib::Vector2 pos,

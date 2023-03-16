@@ -26,7 +26,8 @@ void Paddle::draw()
 		static_cast<float>(m_width), 
 		static_cast<float>(m_height)
 	};
-	rec.Draw(raylib::Color {BLACK});
+	raylib::Color darkGreen {6, 48, 39, 255};
+	rec.DrawRounded(1.0f, 16, darkGreen);
 }
 
 raylib::Rectangle Paddle::getCollisionRec()

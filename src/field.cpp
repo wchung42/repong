@@ -60,9 +60,30 @@ void Field::update(float deltaTime)
 
 void Field::draw()
 {
+    // Draw background
+    raylib::Rectangle fieldBackground {
+        0.0f,
+        0.0f,
+        static_cast<float>(GetScreenWidth()),
+        static_cast<float>(GetScreenHeight())
+    };
+    fieldBackground.Draw(raylib::Color {20, 160, 133, 255});
+
+    /*raylib::Rectangle fieldBorder {fieldBackground};
+    fieldBorder.DrawLines(WHITE, 2.0f);*/
+
+    // Draw middle line
+    raylib::Color middleLine {WHITE};
+    middleLine.DrawLine(
+        raylib::Vector2 {static_cast<float>(GetScreenWidth() / 2), 0.0f},
+        raylib::Vector2 {static_cast<float>(GetScreenWidth() / 2), static_cast<float>(GetScreenHeight())},
+        3.0f
+    );
+
+    m_ball->draw();
 	m_player->draw();
 	m_computer->draw();
-	m_ball->draw();
+	
 }
 
 
@@ -131,12 +152,12 @@ void PowerUpField::update(float deltaTime)
 
 void PowerUpField::draw()
 {
+    Field::draw();
+
     for (auto& powerup : m_powerups)
     {
         powerup->draw();
-    }
-
-    Field::draw();
+    } 
 }
 
 
@@ -178,17 +199,23 @@ void ObstacleField::update(float deltaTime)
             ++itObstacle;
     }
 
+    // Update obstacles
+    for (auto& obstacle : m_obstacles)
+    {
+        obstacle.update(deltaTime);
+    }
+
     Field::update(deltaTime);
 }
 
 void ObstacleField::draw()
 {
+    Field::draw();
+
     for (auto& obstacle : m_obstacles)
     {
         obstacle.draw();
     }
-
-    Field::draw();
 }
 
 void ObstacleField::spawnObstacles()

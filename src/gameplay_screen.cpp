@@ -45,12 +45,10 @@ void GameplayScreen::updateScreen()
         if (nextField < 24)
         {
             m_field = std::make_unique<Field>(m_player, m_computer, m_ball);
-            std::cout << "regular field" << '\n';
         }
         else if (nextField >= 25 && nextField <= 49)
         {
             m_field = std::make_unique<InvertedField>(m_player, m_computer, m_ball);
-            std::cout << "inverted field" << '\n';
         }
         else if (nextField >= 50 && nextField <= 74)
         {
@@ -70,10 +68,5 @@ void GameplayScreen::updateScreen()
 // Gameplay Screen Draw logic
 void GameplayScreen::drawScreen()
 {
-    //DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), RAYWHITE);
-    /*m_player->draw();
-    m_computer->draw();
-    m_ball->draw();*/
     m_field->draw();
-
 }
