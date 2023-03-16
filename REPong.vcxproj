@@ -149,8 +149,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\ball.cpp" />
-    <ClCompile Include="src\computer.cpp" />
     <ClCompile Include="src\field.cpp" />
+    <ClCompile Include="src\obstacle.cpp" />
     <ClCompile Include="src\paddle.cpp" />
     <ClCompile Include="src\game.cpp" />
     <ClCompile Include="src\ending_screen.cpp" />
@@ -158,14 +158,15 @@
     <ClCompile Include="src\logo_screen.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\options_screen.cpp" />
-    <ClCompile Include="src\player.cpp" />
+    <ClCompile Include="src\powerup.cpp" />
     <ClCompile Include="src\screen.cpp" />
     <ClCompile Include="src\title_screen.cpp" />
+    <ClCompile Include="src\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ball.hpp" />
-    <ClInclude Include="src\computer.hpp" />
     <ClInclude Include="src\field.hpp" />
+    <ClInclude Include="src\obstacle.hpp" />
     <ClInclude Include="src\paddle.hpp" />
     <ClInclude Include="src\ending_screen.hpp" />
     <ClInclude Include="src\game.hpp" />
@@ -209,10 +210,11 @@
     <ClInclude Include="src\include\Wave.hpp" />
     <ClInclude Include="src\include\Window.hpp" />
     <ClInclude Include="src\options_screen.hpp" />
-    <ClInclude Include="src\player.hpp" />
+    <ClInclude Include="src\powerup.hpp" />
     <ClInclude Include="src\screen.hpp" />
     <ClInclude Include="src\logo_screen.hpp" />
     <ClInclude Include="src\title_screen.hpp" />
+    <ClInclude Include="src\utils.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

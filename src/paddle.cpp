@@ -1,8 +1,9 @@
 #include "paddle.hpp"
 
+// Paddle class function declarations
 Paddle::Paddle()
 {
-	m_width = 30;
+	m_width = 32;
 	m_height = m_width * 5;
 	m_velocity = 350.0f;
 }
@@ -37,4 +38,65 @@ raylib::Rectangle Paddle::getCollisionRec()
 		static_cast<float>(m_height)
 	};
 	return rec;
+}
+
+
+// Paddle class function declarations
+Player::Player()
+{
+	m_pos = raylib::Vector2 {
+				static_cast<float>(GetScreenWidth() * 0.02f),
+				static_cast<float>(GetScreenHeight() / 2 - m_height / 2)
+	};
+}
+
+Player::~Player() {}
+
+void Player::update(float deltaTime)
+{
+	if ((IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)))
+	{
+		if (m_controlsInverted)
+			m_pos.y += m_velocity * deltaTime;
+		else
+			m_pos.y -= m_velocity * deltaTime;
+	}
+
+	if ((IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)))
+	{
+		if (m_controlsInverted)
+			m_pos.y -= m_velocity * deltaTime;
+		else
+			m_pos.y += m_velocity * deltaTime;
+	}
+
+	Paddle::update(deltaTime);
+}
+
+
+// Computer class function declarations
+Computer::Computer()
+{
+	m_pos = raylib::Vector2 {
+		static_cast<float>(GetScreenWidth() * 0.98f - m_width),
+		static_cast<float>(GetScreenHeight() / 2 - m_height / 2)
+	};
+}
+
+Computer::~Computer() {}
+
+void Computer::update(std::unique_ptr<Ball>& ball, float deltaTime)
+{
+	// Follows the ball
+	if (ball->getVelocity().GetX() > 0.0f)
+	{
+		raylib::Vector2 ballPos = ball->getPos();
+		if (m_pos.GetY() + (m_height / 2) > ballPos.GetY())
+			m_pos.y -= m_velocity * deltaTime;
+
+		if (m_pos.GetY() + (m_height / 2) <= ballPos.GetY())
+			m_pos.y += m_velocity * deltaTime;
+	}
+
+	Paddle::update(deltaTime);
 }
