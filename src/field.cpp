@@ -15,9 +15,9 @@ Field::~Field() {}
 
 void Field::update(float deltaTime)
 {
-    ///////////////////////
-    // Handle collisions //
-    ///////////////////////
+    //----------------------------------------------------------------
+    // Handle collisions 
+    //----------------------------------------------------------------
 
     // Ball collision with top and bottom walls
     if ((m_ball->getPos().GetY() + m_ball->getRadius() >= GetScreenHeight()) ||
@@ -30,11 +30,13 @@ void Field::update(float deltaTime)
     if (m_ball->getPos().GetX() + m_ball->getRadius() >= GetScreenWidth())
     {
         m_changeFields = true;
+        m_player->addScore();
         m_ball->reset();
     }
     else if (m_ball->getPos().GetX() - m_ball->getRadius() <= 0)
     {
         m_changeFields = true;
+        m_computer->addScore();
         m_ball->reset();
     }
 
@@ -79,6 +81,22 @@ void Field::draw()
         raylib::Vector2 {static_cast<float>(GetScreenWidth() / 2), static_cast<float>(GetScreenHeight())},
         3.0f
     );
+
+    // Draw scores
+    raylib::Text playerScore {std::to_string(m_player->getScore()), 75.0f, WHITE, GetFontDefault(), 4.0f};
+    raylib::Vector2 playerScorePos {
+        static_cast<float>(GetScreenWidth() * 0.45 - playerScore.Measure() / 2),
+        static_cast<float>(GetScreenHeight() * 0.05f)
+    };
+    playerScore.Draw(playerScorePos);
+
+    raylib::Text computerScore {std::to_string(m_computer->getScore()), 75.0f, WHITE, GetFontDefault(), 4.0f};
+    raylib::Vector2 computerScorePos {
+        static_cast<float>(GetScreenWidth() * 0.55 - computerScore.Measure() / 2),
+        static_cast<float>(GetScreenHeight() * 0.05f)
+    };
+    computerScore.Draw(computerScorePos);
+    
 
     m_ball->draw();
 	m_player->draw();
@@ -241,8 +259,8 @@ void ObstacleField::spawnObstacles()
         do {
             xSpawnPos = xPosDist(m_mt);
         } while (
-            xSpawnPos >= GetScreenWidth() / 2 - 64 - m_ball->getRadius() && 
-            xSpawnPos <= GetScreenWidth() / 2 + 64 + m_ball->getRadius()
+            xSpawnPos >= GetScreenWidth() / 2 - 128 - m_ball->getRadius() && 
+            xSpawnPos <= GetScreenWidth() / 2 + 128 + m_ball->getRadius()
           );
 
         raylib::Vector2 obstacleSpawnPos {

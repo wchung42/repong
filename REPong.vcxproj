@@ -149,6 +149,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\ball.cpp" />
+    <ClCompile Include="src\button.cpp" />
     <ClCompile Include="src\field.cpp" />
     <ClCompile Include="src\obstacle.cpp" />
     <ClCompile Include="src\paddle.cpp" />
@@ -160,6 +161,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ball.hpp" />
+    <ClInclude Include="src\button.hpp" />
     <ClInclude Include="src\field.hpp" />
     <ClInclude Include="src\obstacle.hpp" />
     <ClInclude Include="src\paddle.hpp" />

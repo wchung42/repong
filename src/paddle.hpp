@@ -12,15 +12,18 @@ protected:
 	float m_velocity {};
 	int m_width {};
 	int m_height {};
+	int m_score {10};
 public:
 	Paddle();
 	~Paddle();
 	void update(float deltaTime);
 	void draw();
 	raylib::Rectangle getCollisionRec();
-	raylib::Vector2 getPos() { return m_pos; }
+	raylib::Vector2 getPos() const { return m_pos; }
+	int getScore() const { return m_score; }
 	int getWidth() { return m_width; }
 	int getHeight() { return m_height; }
+	void addScore() { ++m_score; }
 };
 
 

@@ -5,6 +5,7 @@
 #include "paddle.hpp"
 #include "field.hpp"
 #include "utils.hpp"
+#include "button.hpp"
 
 //----------------------------------------------------------------------------------
 // Types and Structures Definition
@@ -57,15 +58,16 @@ public:
 	~OptionsScreen();
 	void updateScreen();
 	void drawScreen();
-	void unloadScreen();
 };
 
 
 // Title screen class declaration
 class TitleScreen : public Screen
 {
+private:
+	raylib::Font& m_font;
 public:
-	TitleScreen();
+	TitleScreen(raylib::Font& m_font);
 	~TitleScreen();
 	void updateScreen();
 	void drawScreen();
@@ -82,20 +84,29 @@ private:
 	std::unique_ptr<Field> m_field;
 	std::mt19937 m_mt;
 	std::unordered_map<std::string, raylib::Texture2DUnmanaged> m_textures;
+	std::string& m_winner;
+	raylib::Font& m_font;
 public:
-	GameplayScreen();
+	GameplayScreen(std::string& winner, raylib::Font& font);
 	~GameplayScreen();
 	void updateScreen();
 	void drawScreen();
-	void unloadScreen();
 };
 
 
 // Ending screen class declaration
 class EndingScreen : public Screen
 {
+private:
+	std::unordered_map<std::string, raylib::Texture2DUnmanaged> m_textures;
+	std::string m_winner;
+	raylib::Text m_winnerText;
+	raylib::Vector2 m_winnerTextPos;
+	Button m_playAgainButton;
+	Button m_quitButton;
+	raylib::Font& m_font;
 public:
-	EndingScreen();
+	EndingScreen(std::string& winner, raylib::Font& m_font);
 	~EndingScreen();
 	void updateScreen();
 	void drawScreen();

@@ -1,4 +1,5 @@
 #include "screen.hpp"
+#include <iostream>
 
 Screen::Screen() {}
 
@@ -144,7 +145,8 @@ void LogoScreen::drawScreen()
 // Title Screen Functions Definition
 //----------------------------------------------------------------------------------
 
-TitleScreen::TitleScreen()
+TitleScreen::TitleScreen(raylib::Font& font)
+    : m_font(font)
 {
 
 }
@@ -210,8 +212,8 @@ void OptionsScreen::drawScreen()
 // Gameplay Screen Functions Definition
 //----------------------------------------------------------------------------------
 
-GameplayScreen::GameplayScreen()
-    : m_mt((std::random_device())())
+GameplayScreen::GameplayScreen(std::string& winner, raylib::Font& font)
+    : m_winner(winner), m_font(font), m_mt((std::random_device())())
 {
     m_player = std::make_unique<Player>();
     m_computer = std::make_unique<Computer>();
@@ -229,12 +231,23 @@ GameplayScreen::GameplayScreen()
 GameplayScreen::~GameplayScreen()
 {
     // Unload resources
+    for (auto& [name, texture] : m_textures)
+    {
+        texture.Unload();
+    }
 }
 
 
 // Gameplay Screen Update logic
 void GameplayScreen::updateScreen()
 {
+    if (m_player->getScore() >= 10 || m_computer->getScore() >= 10)
+    {
+        m_winner = m_player->getScore() >= 10 ? "player" : "computer";
+        m_nextScreen = ENDING;
+        return;
+    }
+
     float deltaTime {GetFrameTime()};
 
     // change fields when someone scores
@@ -276,36 +289,93 @@ void GameplayScreen::drawScreen()
 // Ending Screen Functions Definition
 //----------------------------------------------------------------------------------
 
-EndingScreen::EndingScreen()
+EndingScreen::EndingScreen(std::string& winner, raylib::Font& font)
+    : m_winner(winner), m_font(font)
 {
+    // Load resources
+    utils::loadTextures({
+        "./src/resources/textures/play_again_button.png",
+        "./src/resources/textures/quit_button.png"
+    }, m_textures);
 
+    std::string winText {};
+    if (m_winner == "player")
+        winText = "You win!";
+    else
+        winText = "Computer wins!";
+
+    m_winnerText = raylib::Text {
+        std::string {winText},
+        100.0f,
+        raylib::Color {6, 48, 39, 255},
+        m_font,
+        3.0f
+    };
+    raylib::Vector2 winnerTextSize = m_winnerText.MeasureEx();
+    m_winnerTextPos = raylib::Vector2 {
+        static_cast<float>(GetScreenWidth() / 2 - winnerTextSize.GetX() / 2),
+        static_cast<float>(GetScreenHeight() * 0.25)
+    };
+    
+    float textButtonSpacing {50.0f};
+    float buttonSpacing {20.0f};
+    float buttonScale {1.0f};
+    m_playAgainButton = Button {
+        raylib::Vector2 {
+            static_cast<float>(GetScreenWidth() / 2 - m_textures["play_again_button"].GetWidth() / 2),
+            m_winnerTextPos.GetY() + winnerTextSize.GetY() + textButtonSpacing},
+        m_textures["play_again_button"],
+        buttonScale
+    };
+
+    m_quitButton = Button {
+        raylib::Vector2 {
+            static_cast<float>(GetScreenWidth() / 2 - m_textures["quit_button"].GetWidth() / 2),
+            static_cast<float>(m_playAgainButton.getPos().GetY() + m_playAgainButton.getHeight() - buttonSpacing)},
+        m_textures["quit_button"],
+        buttonScale
+    };
 }
 
 EndingScreen::~EndingScreen()
 {
     // Unload resources
+    for (auto& [name, texture] : m_textures)
+    {
+        texture.Unload();
+    }
 }
 
 // Ending Screen Update logic
 void EndingScreen::updateScreen()
 {
-    // TODO: Update ENDING screen variables here!
-
-    // Press enter or tap to return to TITLE screen
-    if (IsKeyPressed(KEY_ENTER) || IsGestureDetected(GESTURE_TAP))
+    if (m_playAgainButton.isClicked())
     {
-        m_nextScreen = 1;
-        //PlaySound(fxCoin);
+        //finishScreen = 1;     // OPTIONS
+        m_nextScreen = 3;     // GAMEPLAY
+        return;
     }
+
+    //if (m_quitButton.isClicked() || WindowShouldClose())
+    //{
+    //    m_finishScreen = 6;     // Exit game
+    //    return;
+    //}
+    m_playAgainButton.update();
+    m_quitButton.update();
 }
 
 // Ending Screen Draw logic
 void EndingScreen::drawScreen()
 {
-    // TODO: Draw ENDING screen here!
-    DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), BLUE);
-    raylib::Vector2 titlePosition {20, 10};
-    raylib::DrawText("ENDING SCREEN", titlePosition.GetX(), titlePosition.GetY(), 20, DARKBLUE);
-    raylib::Vector2 instructionPosition {120, 220};
-    raylib::DrawText("PRESS ENTER or TAP to RETURN to TITLE SCREEN", instructionPosition.GetX(), instructionPosition.GetY(), 30, DARKBLUE);
+    m_winnerText.Draw(m_winnerTextPos);
+    m_playAgainButton.draw();
+    m_quitButton.draw();
+    DrawLine(
+        GetScreenWidth() / 2,
+        0.0f,
+        GetScreenWidth() / 2,
+        GetScreenHeight(),
+        RED
+    );
 }

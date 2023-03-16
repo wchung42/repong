@@ -13,15 +13,17 @@ void Game::initialize()
     m_title = std::string ("RE:Pong");
 	m_window.raylib::Window::Init(m_windowWidth, m_windowHeight, m_title);
 	
+    // Load font
+    m_font = raylib::Font("./src/resources/fonts/Roboto-Regular.ttf", 128);
+    SetTextureFilter(m_font.texture, TEXTURE_FILTER_BILINEAR);
+
     // Setup and init first screen
     m_currentScreen = GAMEPLAY;
-    m_screen = std::make_unique<GameplayScreen>();
+    m_screen = std::make_unique<GameplayScreen>(m_winner, m_font);
 
     m_window.SetTargetFPS(m_targetFPS);       // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
-
 }
-
 
 void Game::runLoop()
 {
@@ -87,7 +89,7 @@ void Game::updateGame(float deltaTime)
 void Game::renderGame()
 {
 	BeginDrawing();
-		m_window.ClearBackground(RAYWHITE);
+		m_window.ClearBackground(raylib::Color {20, 160, 133, 255});
         m_screen->drawScreen();
 
         // Draw full screen rectangle in front of everything
@@ -107,15 +109,15 @@ void Game::changeToScreen(GameScreen screen)
         } break;
         case TITLE:
         {
-            m_screen = std::make_unique<TitleScreen>();
+            m_screen = std::make_unique<TitleScreen>(m_font);
         } break;
         case GAMEPLAY: 
         {
-            m_screen = std::make_unique<GameplayScreen>();
+            m_screen = std::make_unique<GameplayScreen>(m_winner, m_font);
         } break;
         case ENDING: 
         {
-            m_screen = std::make_unique<EndingScreen>();
+            m_screen = std::make_unique<EndingScreen>(m_winner, m_font);
         } break;
         default: break;
     }
@@ -154,15 +156,15 @@ void Game::updateTransition(void)
                 } break;
                 case TITLE:
                 {
-                    m_screen = std::make_unique<TitleScreen>();
+                    m_screen = std::make_unique<TitleScreen>(m_font);
                 } break;
                 case GAMEPLAY:
                 {
-                    m_screen = std::make_unique<GameplayScreen>();
+                    m_screen = std::make_unique<GameplayScreen>(m_winner, m_font);
                 } break;
                 case ENDING:
                 {
-                    m_screen = std::make_unique<EndingScreen>();
+                    m_screen = std::make_unique<EndingScreen>(m_winner, m_font);
                 } break;
                 default: break;
             }

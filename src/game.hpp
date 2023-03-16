@@ -20,6 +20,8 @@ private:
 	int m_transFromScreen {-1};
 	std::unique_ptr<Screen> m_screen;
 	GameScreen m_transToScreen = UNKNOWN;
+	std::string m_winner {};
+	raylib::Font m_font;
 public:
 	Game();
 	~Game();
