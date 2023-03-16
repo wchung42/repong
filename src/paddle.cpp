@@ -5,17 +5,17 @@ Paddle::Paddle()
 {
 	m_width = 32;
 	m_height = m_width * 5;
-	m_velocity = 350.0f;
+	m_velocity = 400.0f;
 }
 
 Paddle::~Paddle() {}
 
 void Paddle::update(float deltaTime)
 {
-	if (m_pos.GetY() < 0.0f)
-		m_pos.y = 0.0f;
+	if (m_pos.GetY() < 5.0f)	// Account for screen border of thickness 5px
+		m_pos.y = 5.0f;
 	else if (m_pos.GetY() + m_height > GetScreenHeight())
-		m_pos.y = GetScreenHeight() - m_height;
+		m_pos.y = GetScreenHeight() - m_height - 5.0f;
 }
 
 void Paddle::draw()
@@ -27,7 +27,7 @@ void Paddle::draw()
 		static_cast<float>(m_height)
 	};
 	raylib::Color darkGreen {6, 48, 39, 255};
-	rec.DrawRounded(1.0f, 16, darkGreen);
+	rec.DrawRounded(1.0f, 8, darkGreen);
 }
 
 raylib::Rectangle Paddle::getCollisionRec()

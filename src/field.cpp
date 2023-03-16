@@ -69,8 +69,8 @@ void Field::draw()
     };
     fieldBackground.Draw(raylib::Color {20, 160, 133, 255});
 
-    /*raylib::Rectangle fieldBorder {fieldBackground};
-    fieldBorder.DrawLines(WHITE, 2.0f);*/
+    raylib::Rectangle fieldBorder {fieldBackground};
+    fieldBorder.DrawLines(WHITE, 3.0f);
 
     // Draw middle line
     raylib::Color middleLine {WHITE};

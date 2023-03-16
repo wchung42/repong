@@ -1,10 +1,5 @@
 #include "game.hpp"
 #include "screen.hpp"
-#include "logo_screen.hpp"
-#include "title_screen.hpp"
-#include "gameplay_screen.hpp"
-#include "options_screen.hpp"
-#include "ending_screen.hpp"
 #include <iostream>
 #include <memory>
 

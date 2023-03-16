@@ -70,7 +70,7 @@ void Ball::setRandomVelocity()
 
 void Ball::onCollisionPaddles(raylib::Vector2 paddlePos, int paddleHeight)
 {
-	m_speed *= 1.1f;	// Increase speed by 10 percent on collision
+	m_speed *= 1.075f;	// Increase speed by 10 percent on collision
 
 	// Calculate new ball velocity
 	float relativeIntersectY = (paddlePos.GetY() + (static_cast<float>(paddleHeight / 2))) - m_pos.GetY();
@@ -87,8 +87,9 @@ void Ball::onCollisionPaddles(raylib::Vector2 paddlePos, int paddleHeight)
 
 void Ball::onCollisionWalls()
 {
-	m_speed *= 1.05f;		// Increase speed by 5 percent on collision
-	m_velocity.y *= -1;		// Change y direction
+	m_speed *= 1.05f;			// Increase speed magnitude by 5 percent on collision
+	m_velocity.x * 1.05f;		// Increase velocity x by 5 percent
+	m_velocity.y *= -1.05f;		// Increase velocity y by 5 percent and change directions
 }
 
 void Ball::onCollisionObstacles(const Obstacle& obstacle)

@@ -5,8 +5,6 @@
 #include "powerup.hpp"
 #include "obstacle.hpp"
 
-typedef enum FieldType { DEFAULT = 0, POWERUP, OBSTACLE, INVERTED, DARK} FieldType;
-
 
 // Base Field class declarations
 class Field
