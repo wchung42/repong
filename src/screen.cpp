@@ -162,10 +162,10 @@ TitleScreen::TitleScreen(raylib::Font& font)
 
     m_title = raylib::Text {
         std::string {"RE:pong"},
-        125.0f,
+        120.0f,
         raylib::Color {6, 48, 39, 255},
         m_font,
-        0.8f
+        0.75f
     };
     raylib::Vector2 titleSize {m_title.MeasureEx()};
     m_titlePos = raylib::Vector2 {
@@ -173,26 +173,27 @@ TitleScreen::TitleScreen(raylib::Font& font)
         static_cast<float>(GetScreenHeight() * 0.25f)
     };
 
+    float buttonScale {0.9};
     float titleButtonSpacing {35.0f};
     raylib::Vector2 playButtonPos {
-        static_cast<float>(GetScreenWidth() / 2 - m_textures["play_button"].GetWidth() / 2),
+        static_cast<float>(GetScreenWidth() / 2 - m_textures["play_button"].GetWidth() * buttonScale / 2),
         static_cast<float>(m_titlePos.GetY() + titleSize.GetY() + titleButtonSpacing) 
     };
     m_playButton = Button {
         playButtonPos,
         m_textures["play_button"],
-        1.0f
+        buttonScale
     };
 
-    float buttonSpacing {15.0f};
+    float buttonSpacing {20.0f};
     raylib::Vector2 quitButtonPos {
-        static_cast<float>(GetScreenWidth() / 2 - m_textures["play_button"].GetWidth() / 2),
+        static_cast<float>(GetScreenWidth() / 2 - m_textures["play_button"].GetWidth() * buttonScale / 2),
         static_cast<float>(m_playButton.getPos().GetY() + m_playButton.getHeight() - buttonSpacing)
     };
     m_quitButton = Button {
         quitButtonPos,
         m_textures["quit_button"],
-        1.0f
+        buttonScale
     };
 }
 
@@ -214,11 +215,11 @@ void TitleScreen::updateScreen()
         return;
     }
 
-    //if (m_quitButton.isClicked() || WindowShouldClose())
-    //{
-    //    m_finishScreen = 6;     // Exit game
-    //    return;
-    //}
+    if (m_quitButton.isClicked() || WindowShouldClose())
+    {
+        m_nextScreen = 6;     // Exit game
+        return;
+    }
 
     m_playButton.update();
     m_quitButton.update();
@@ -307,6 +308,12 @@ GameplayScreen::~GameplayScreen()
 // Gameplay Screen Update logic
 void GameplayScreen::updateScreen()
 {
+    if (WindowShouldClose())
+    {
+        m_nextScreen = 6;       // Exit game
+        return;
+    }
+
     if (m_player->getScore() >= 10 || m_computer->getScore() >= 10)
     {
         m_winner = m_player->getScore() >= 10 ? "player" : "computer";
@@ -348,15 +355,6 @@ void GameplayScreen::updateScreen()
 void GameplayScreen::drawScreen()
 {
     Screen::drawScreen();
-    //// Draw background
-    //raylib::Rectangle fieldBackground {
-    //    0.0f,
-    //    0.0f,
-    //    static_cast<float>(GetScreenWidth()),
-    //    static_cast<float>(GetScreenHeight())
-    //};
-    //fieldBackground.Draw(raylib::Color {20, 160, 133, 255});
-
     m_field->draw();
 }
 
@@ -382,10 +380,10 @@ EndingScreen::EndingScreen(std::string& winner, raylib::Font& font)
 
     m_winnerText = raylib::Text {
         std::string {winText},
-        100.0f,
+        120.0f,
         raylib::Color {6, 48, 39, 255},
         m_font,
-        1.0f
+        0.75f
     };
     raylib::Vector2 winnerTextSize = m_winnerText.MeasureEx();
     m_winnerTextPos = raylib::Vector2 {
@@ -395,10 +393,10 @@ EndingScreen::EndingScreen(std::string& winner, raylib::Font& font)
     
     float textButtonSpacing {50.0f};
     float buttonSpacing {20.0f};
-    float buttonScale {1.0f};
+    float buttonScale {0.9f};
     m_playAgainButton = Button {
         raylib::Vector2 {
-            static_cast<float>(GetScreenWidth() / 2 - m_textures["play_again_button"].GetWidth() / 2),
+            static_cast<float>(GetScreenWidth() / 2 - m_textures["play_again_button"].GetWidth() * buttonScale / 2),
             m_winnerTextPos.GetY() + winnerTextSize.GetY() + textButtonSpacing},
         m_textures["play_again_button"],
         buttonScale
@@ -406,7 +404,7 @@ EndingScreen::EndingScreen(std::string& winner, raylib::Font& font)
 
     m_quitButton = Button {
         raylib::Vector2 {
-            static_cast<float>(GetScreenWidth() / 2 - m_textures["quit_button"].GetWidth() / 2),
+            static_cast<float>(GetScreenWidth() / 2 - m_textures["quit_button"].GetWidth() * buttonScale / 2),
             static_cast<float>(m_playAgainButton.getPos().GetY() + m_playAgainButton.getHeight() - buttonSpacing)},
         m_textures["quit_button"],
         buttonScale
@@ -432,11 +430,12 @@ void EndingScreen::updateScreen()
         return;
     }
 
-    //if (m_quitButton.isClicked() || WindowShouldClose())
-    //{
-    //    m_finishScreen = 6;     // Exit game
-    //    return;
-    //}
+    if (m_quitButton.isClicked() || WindowShouldClose())
+    {
+        m_nextScreen = 6;     // Exit game
+        return;
+    }
+
     m_playAgainButton.update();
     m_quitButton.update();
 }

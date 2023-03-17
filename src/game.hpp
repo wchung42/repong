@@ -23,6 +23,7 @@ private:
 	std::string m_winner {};
 	raylib::Font m_font;
 	raylib::AudioDevice m_audio;
+	bool m_exitGame {};
 public:
 	Game();
 	~Game();

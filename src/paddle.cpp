@@ -5,7 +5,7 @@ Paddle::Paddle()
 {
 	m_width = 32;
 	m_height = m_width * 5;
-	m_velocity = 400.0f;
+	m_velocity = 450.0f;
 }
 
 Paddle::~Paddle() {}

@@ -12,6 +12,7 @@ void Game::initialize()
     // Initialize window
     m_title = std::string ("RE:Pong");
 	m_window.raylib::Window::Init(m_windowWidth, m_windowHeight, m_title);
+    SetExitKey(0);
 	
     // Load font
     m_font = raylib::Font("./src/resources/fonts/Roboto-Regular.ttf", 128);
@@ -27,10 +28,9 @@ void Game::initialize()
 
 void Game::runLoop()
 {
-	while (!m_window.ShouldClose())
+	while (!m_exitGame)
 	{
-		const float dT = m_window.GetFrameTime();
-		updateGame(dT);
+		updateGame(m_window.GetFrameTime());
 		renderGame();
 	}
 }
@@ -42,6 +42,12 @@ void Game::shutdown()
 
 void Game::updateGame(float deltaTime)
 {
+    if (WindowShouldClose())
+    {
+        m_exitGame = true;
+        return;
+    }
+
 	// Update game variables
     if (m_onTransition)
     {
@@ -62,7 +68,7 @@ void Game::updateGame(float deltaTime)
         {
             if (nextScreen == 1) transitionToScreen(OPTIONS);
             else if (nextScreen == 3) transitionToScreen(GAMEPLAY);
-
+            else if (nextScreen == 6) changeToScreen(EXIT);
         } break;
         case OPTIONS:
         {
@@ -78,7 +84,11 @@ void Game::updateGame(float deltaTime)
         case ENDING:
         {
             if (nextScreen == 3) transitionToScreen(GAMEPLAY);
-
+            else if (nextScreen == 6) changeToScreen(EXIT);
+        } break;
+        case EXIT:
+        {
+            m_exitGame = true;
         } break;
         default: break;
     }
@@ -118,6 +128,10 @@ void Game::changeToScreen(GameScreen screen)
         case ENDING: 
         {
             m_screen = std::make_unique<EndingScreen>(m_winner, m_font);
+        } break;
+        case EXIT:
+        {
+            m_exitGame = true;
         } break;
         default: break;
     }
