@@ -18,8 +18,8 @@ void Game::initialize()
     SetTextureFilter(m_font.texture, TEXTURE_FILTER_BILINEAR);
 
     // Setup and init first screen
-    m_currentScreen = GAMEPLAY;
-    m_screen = std::make_unique<GameplayScreen>(m_winner, m_font);
+    m_currentScreen = LOGO;
+    m_screen = std::make_unique<LogoScreen>();
 
     m_window.SetTargetFPS(m_targetFPS);       // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
@@ -61,7 +61,7 @@ void Game::updateGame(float deltaTime)
         case TITLE:
         {
             if (nextScreen == 1) transitionToScreen(OPTIONS);
-            else if (nextScreen == 2) transitionToScreen(GAMEPLAY);
+            else if (nextScreen == 3) transitionToScreen(GAMEPLAY);
 
         } break;
         case OPTIONS:
@@ -77,7 +77,7 @@ void Game::updateGame(float deltaTime)
         } break;
         case ENDING:
         {
-            if (nextScreen) transitionToScreen(TITLE);
+            if (nextScreen == 3) transitionToScreen(TITLE);
 
         } break;
         default: break;
@@ -89,7 +89,7 @@ void Game::updateGame(float deltaTime)
 void Game::renderGame()
 {
 	BeginDrawing();
-		m_window.ClearBackground(raylib::Color {20, 160, 133, 255});
+		m_window.ClearBackground(RAYWHITE);
         m_screen->drawScreen();
 
         // Draw full screen rectangle in front of everything

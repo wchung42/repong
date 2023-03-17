@@ -47,7 +47,7 @@ void Button::draw()
 		m_height * m_scale
 	};
 	m_texture.Draw(sourceTextureRec, destTextureRec, raylib::Vector2 {}, 0.0f, WHITE);
-	DrawRectangleLinesEx(getCollisionRec(), 1.0f, RED);
+	// DrawRectangleLinesEx(getCollisionRec(), 1.0f, RED);
 }
 
 raylib::Rectangle Button::getCollisionRec()

@@ -15,7 +15,14 @@ void Screen::updateScreen()
 
 void Screen::drawScreen()
 {
-	// Draw screen
+    // Draw background
+    raylib::Rectangle fieldBackground {
+        0.0f,
+        0.0f,
+        static_cast<float>(GetScreenWidth()),
+        static_cast<float>(GetScreenHeight())
+    };
+    fieldBackground.Draw(raylib::Color {20, 160, 133, 255});
 }
 
 
@@ -148,36 +155,82 @@ void LogoScreen::drawScreen()
 TitleScreen::TitleScreen(raylib::Font& font)
     : m_font(font)
 {
+    utils::loadTextures({
+        "./src/resources/textures/play_button.png",
+        "./src/resources/textures/quit_button.png"
+    }, m_textures);
 
+    m_title = raylib::Text {
+        std::string {"RE:pong"},
+        125.0f,
+        raylib::Color {6, 48, 39, 255},
+        m_font,
+        0.8f
+    };
+    raylib::Vector2 titleSize {m_title.MeasureEx()};
+    m_titlePos = raylib::Vector2 {
+        static_cast<float>(GetScreenWidth() / 2 - titleSize.GetX() / 2),
+        static_cast<float>(GetScreenHeight() * 0.25f)
+    };
+
+    float titleButtonSpacing {35.0f};
+    raylib::Vector2 playButtonPos {
+        static_cast<float>(GetScreenWidth() / 2 - m_textures["play_button"].GetWidth() / 2),
+        static_cast<float>(m_titlePos.GetY() + titleSize.GetY() + titleButtonSpacing) 
+    };
+    m_playButton = Button {
+        playButtonPos,
+        m_textures["play_button"],
+        1.0f
+    };
+
+    float buttonSpacing {15.0f};
+    raylib::Vector2 quitButtonPos {
+        static_cast<float>(GetScreenWidth() / 2 - m_textures["play_button"].GetWidth() / 2),
+        static_cast<float>(m_playButton.getPos().GetY() + m_playButton.getHeight() - buttonSpacing)
+    };
+    m_quitButton = Button {
+        quitButtonPos,
+        m_textures["quit_button"],
+        1.0f
+    };
 }
 
 TitleScreen::~TitleScreen()
 {
-
+    for (auto& [name, texture] : m_textures)
+    {
+        texture.Unload();
+    }
 }
 
 // Title Screen Update logic
 void TitleScreen::updateScreen()
 {
-    // TODO: Update TITLE screen variables here!
-
-    // Press enter or tap to change to GAMEPLAY screen
-    if (IsKeyPressed(KEY_ENTER) || IsGestureDetected(GESTURE_TAP))
+    if (m_playButton.isClicked())
     {
-        //finishScreen = 1;   // OPTIONS
-        m_nextScreen = 2;   // GAMEPLAY
+        //finishScreen = 1;     // OPTIONS
+        m_nextScreen = 3;       // GAMEPLAY
+        return;
     }
+
+    //if (m_quitButton.isClicked() || WindowShouldClose())
+    //{
+    //    m_finishScreen = 6;     // Exit game
+    //    return;
+    //}
+
+    m_playButton.update();
+    m_quitButton.update();
 }
 
 // Title Screen Draw logic
 void TitleScreen::drawScreen()
 {
-    // TODO: Draw TITLE screen here!
-    DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), GREEN);
-    raylib::Vector2 titlePosition {20, 10};
-    raylib::DrawText("TITLE SCREEN", titlePosition.GetX(), titlePosition.GetY(), 20, DARKGREEN);
-    raylib::Vector2 instructionPosition = {120, 220};
-    raylib::DrawText("PRESS ENTER or TAP to JUMP to GAMEPLAY SCREEN", instructionPosition.GetX(), instructionPosition.GetY(), 30, DARKGREEN);
+    Screen::drawScreen();
+    m_title.Draw(m_titlePos);
+    m_playButton.draw();
+    m_quitButton.draw();
 }
 
 
@@ -204,7 +257,7 @@ void OptionsScreen::updateScreen()
 // Options Screen Draw logic
 void OptionsScreen::drawScreen()
 {
-    // TODO: Draw OPTIONS screen here!
+    Screen::drawScreen();
 }
 
 
@@ -281,6 +334,16 @@ void GameplayScreen::updateScreen()
 // Gameplay Screen Draw logic
 void GameplayScreen::drawScreen()
 {
+    Screen::drawScreen();
+    //// Draw background
+    //raylib::Rectangle fieldBackground {
+    //    0.0f,
+    //    0.0f,
+    //    static_cast<float>(GetScreenWidth()),
+    //    static_cast<float>(GetScreenHeight())
+    //};
+    //fieldBackground.Draw(raylib::Color {20, 160, 133, 255});
+
     m_field->draw();
 }
 
@@ -309,7 +372,7 @@ EndingScreen::EndingScreen(std::string& winner, raylib::Font& font)
         100.0f,
         raylib::Color {6, 48, 39, 255},
         m_font,
-        3.0f
+        1.0f
     };
     raylib::Vector2 winnerTextSize = m_winnerText.MeasureEx();
     m_winnerTextPos = raylib::Vector2 {
@@ -368,6 +431,8 @@ void EndingScreen::updateScreen()
 // Ending Screen Draw logic
 void EndingScreen::drawScreen()
 {
+    Screen::drawScreen();
+
     m_winnerText.Draw(m_winnerTextPos);
     m_playAgainButton.draw();
     m_quitButton.draw();

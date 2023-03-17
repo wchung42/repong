@@ -65,7 +65,12 @@ public:
 class TitleScreen : public Screen
 {
 private:
+	std::unordered_map<std::string, raylib::Texture2DUnmanaged> m_textures;
 	raylib::Font& m_font;
+	raylib::Text m_title {};
+	raylib::Vector2 m_titlePos {};
+	Button m_playButton;
+	Button m_quitButton;
 public:
 	TitleScreen(raylib::Font& m_font);
 	~TitleScreen();

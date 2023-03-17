@@ -85,14 +85,14 @@ void Field::draw()
     // Draw scores
     raylib::Text playerScore {std::to_string(m_player->getScore()), 75.0f, WHITE, GetFontDefault(), 4.0f};
     raylib::Vector2 playerScorePos {
-        static_cast<float>(GetScreenWidth() * 0.45 - playerScore.Measure() / 2),
+        static_cast<float>(GetScreenWidth() * 0.46 - playerScore.Measure() / 2),
         static_cast<float>(GetScreenHeight() * 0.05f)
     };
     playerScore.Draw(playerScorePos);
 
     raylib::Text computerScore {std::to_string(m_computer->getScore()), 75.0f, WHITE, GetFontDefault(), 4.0f};
     raylib::Vector2 computerScorePos {
-        static_cast<float>(GetScreenWidth() * 0.55 - computerScore.Measure() / 2),
+        static_cast<float>(GetScreenWidth() * 0.54 - computerScore.Measure() / 2),
         static_cast<float>(GetScreenHeight() * 0.05f)
     };
     computerScore.Draw(computerScorePos);

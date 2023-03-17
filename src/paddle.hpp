@@ -12,7 +12,7 @@ protected:
 	float m_velocity {};
 	int m_width {};
 	int m_height {};
-	int m_score {10};
+	int m_score {};
 public:
 	Paddle();
 	~Paddle();
