@@ -15,7 +15,7 @@ void Game::initialize()
     SetExitKey(0);
 	
     // Load font
-    m_font = raylib::Font("./src/resources/fonts/Roboto-Regular.ttf", 128);
+    m_font = raylib::Font("./src/resources/fonts/ModernSans-Light.otf", 128);
     SetTextureFilter(m_font.texture, TEXTURE_FILTER_BILINEAR);
 
     // Setup and init first screen

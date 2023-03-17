@@ -156,28 +156,23 @@ TitleScreen::TitleScreen(raylib::Font& font)
     : m_font(font)
 {
     utils::loadTextures({
+        "./src/resources/textures/title.png",
         "./src/resources/textures/play_button.png",
         "./src/resources/textures/quit_button.png"
     }, m_textures);
 
-    m_title = raylib::Text {
-        std::string {"RE:pong"},
-        120.0f,
-        raylib::Color {6, 48, 39, 255},
-        m_font,
-        0.75f
-    };
-    raylib::Vector2 titleSize {m_title.MeasureEx()};
+    // Draw title
+    m_title = m_textures["title"];
     m_titlePos = raylib::Vector2 {
-        static_cast<float>(GetScreenWidth() / 2 - titleSize.GetX() / 2),
-        static_cast<float>(GetScreenHeight() * 0.25f)
+        static_cast<float>(GetScreenWidth() / 2 - m_textures["title"].GetWidth() / 2),
+        static_cast<float>(GetScreenHeight() * 0.20f)
     };
 
     float buttonScale {0.9};
-    float titleButtonSpacing {35.0f};
+    float titleButtonSpacing {25.0f};
     raylib::Vector2 playButtonPos {
         static_cast<float>(GetScreenWidth() / 2 - m_textures["play_button"].GetWidth() * buttonScale / 2),
-        static_cast<float>(m_titlePos.GetY() + titleSize.GetY() + titleButtonSpacing) 
+        static_cast<float>(m_titlePos.GetY() + m_textures["title"].GetHeight() + titleButtonSpacing)
     };
     m_playButton = Button {
         playButtonPos,
@@ -229,9 +224,10 @@ void TitleScreen::updateScreen()
 void TitleScreen::drawScreen()
 {
     Screen::drawScreen();
-    m_title.Draw(m_titlePos);
+    m_title.Draw(m_titlePos, 0.0f, 1.0f, WHITE);
     m_playButton.draw();
     m_quitButton.draw();
+    
 }
 
 
@@ -356,6 +352,21 @@ void GameplayScreen::drawScreen()
 {
     Screen::drawScreen();
     m_field->draw();
+    
+    // Draw scores
+    raylib::Text playerScore {std::to_string(m_player->getScore()), 100.0f, WHITE, m_font, 1.0f};
+    raylib::Vector2 playerScorePos {
+        static_cast<float>(GetScreenWidth() * 0.45 - playerScore.Measure() / 2),
+        static_cast<float>(GetScreenHeight() * 0.05f)
+    };
+    playerScore.Draw(playerScorePos);
+
+    raylib::Text computerScore {std::to_string(m_computer->getScore()), 100.0f, WHITE, m_font, 1.0f};
+    raylib::Vector2 computerScorePos {
+        static_cast<float>(GetScreenWidth() * 0.55 - computerScore.Measure() / 2),
+        static_cast<float>(GetScreenHeight() * 0.05f)
+    };
+    computerScore.Draw(computerScorePos);
 }
 
 
@@ -380,10 +391,10 @@ EndingScreen::EndingScreen(std::string& winner, raylib::Font& font)
 
     m_winnerText = raylib::Text {
         std::string {winText},
-        120.0f,
+        100.0f,
         raylib::Color {6, 48, 39, 255},
         m_font,
-        0.75f
+        1.0f
     };
     raylib::Vector2 winnerTextSize = m_winnerText.MeasureEx();
     m_winnerTextPos = raylib::Vector2 {
