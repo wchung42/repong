@@ -28,11 +28,11 @@ Keyboard:
 
  - **Font**: [Modern Sans by Fortress Tech](https://www.dafont.com/font-comment.php?file=modern_sans)
 
-### Links
+## Links
 
  - itch.io Release: [Download Here](#)
 
-### License
+## License
 
 This game sources are licensed under an unmodified zlib/libpng license, which is an OSI-certified, BSD-like license that allows static linking with closed source software. Check [LICENSE](LICENSE) for further details.
 
