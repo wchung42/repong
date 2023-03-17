@@ -22,6 +22,7 @@ private:
 	GameScreen m_transToScreen = UNKNOWN;
 	std::string m_winner {};
 	raylib::Font m_font;
+	raylib::AudioDevice m_audio;
 public:
 	Game();
 	~Game();

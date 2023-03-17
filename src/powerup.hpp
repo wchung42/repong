@@ -24,7 +24,10 @@ public:
 	virtual ~PowerUp();
 	void draw();
 	raylib::Rectangle getCollisionRec();
-	virtual void onCollision(std::unique_ptr<Ball>& ball);
+	virtual void onCollision(
+		std::unique_ptr<Ball>& ball,
+		std::unordered_map<std::string, Sound>& sounds
+	);
 };
 
 
@@ -40,7 +43,8 @@ public:
 		float speedMultiplier
 	);
 	~SpeedPowerUp();
-	void onCollision(std::unique_ptr<Ball>& ball) override;
+	void onCollision(std::unique_ptr<Ball>& ball,
+		std::unordered_map<std::string, Sound>& sounds) override;
 };
 
 
@@ -56,7 +60,9 @@ public:
 		float freezeDuration
 	);
 	~FreezePowerUp();
-	void onCollision(std::unique_ptr<Ball>& ball) override;
+	void onCollision(
+		std::unique_ptr<Ball>& ball,
+		std::unordered_map<std::string, Sound>& sounds) override;
 };
 
 

@@ -89,6 +89,7 @@ private:
 	std::unique_ptr<Field> m_field;
 	std::mt19937 m_mt;
 	std::unordered_map<std::string, raylib::Texture2DUnmanaged> m_textures;
+	std::unordered_map<std::string, Sound> m_sounds;
 	std::string& m_winner;
 	raylib::Font& m_font;
 public:

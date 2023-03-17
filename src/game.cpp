@@ -77,7 +77,7 @@ void Game::updateGame(float deltaTime)
         } break;
         case ENDING:
         {
-            if (nextScreen == 3) transitionToScreen(TITLE);
+            if (nextScreen == 3) transitionToScreen(GAMEPLAY);
 
         } break;
         default: break;

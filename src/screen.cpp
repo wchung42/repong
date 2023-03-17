@@ -268,17 +268,25 @@ void OptionsScreen::drawScreen()
 GameplayScreen::GameplayScreen(std::string& winner, raylib::Font& font)
     : m_winner(winner), m_font(font), m_mt((std::random_device())())
 {
-    m_player = std::make_unique<Player>();
-    m_computer = std::make_unique<Computer>();
-    m_ball = std::make_unique<Ball>();
-    m_field = std::make_unique<Field>(m_player, m_computer, m_ball);
-
     // Load game textures
     utils::loadTextures({
         "./src/resources/textures/freeze.png",
         "./src/resources/textures/speed_up.png"
-        }, m_textures);
+    }, m_textures);
 
+    // Load sounds
+    utils::loadSounds({
+        "./src/resources/sfx/freeze.wav",
+        "./src/resources/sfx/paddle_hit.wav",
+        "./src/resources/sfx/score.wav",
+        "./src/resources/sfx/speed.wav",
+        "./src/resources/sfx/wall_hit.wav"
+    }, m_sounds);
+
+    m_player = std::make_unique<Player>();
+    m_computer = std::make_unique<Computer>();
+    m_ball = std::make_unique<Ball>();
+    m_field = std::make_unique<Field>(m_player, m_computer, m_ball, m_sounds);
 }
 
 GameplayScreen::~GameplayScreen()
@@ -288,8 +296,13 @@ GameplayScreen::~GameplayScreen()
     {
         texture.Unload();
     }
-}
 
+    // Unload sounds
+    for (auto& [name, sound] : m_sounds)
+    {
+        UnloadSound(sound);
+    }
+}
 
 // Gameplay Screen Update logic
 void GameplayScreen::updateScreen()
@@ -310,19 +323,19 @@ void GameplayScreen::updateScreen()
         int nextField {distField(m_mt)};
         if (nextField < 24)
         {
-            m_field = std::make_unique<Field>(m_player, m_computer, m_ball);
+            m_field = std::make_unique<Field>(m_player, m_computer, m_ball, m_sounds);
         }
         else if (nextField >= 25 && nextField <= 49)
         {
-            m_field = std::make_unique<InvertedField>(m_player, m_computer, m_ball);
+            m_field = std::make_unique<InvertedField>(m_player, m_computer, m_ball, m_sounds);
         }
         else if (nextField >= 50 && nextField <= 74)
         {
-            m_field = std::make_unique<PowerUpField>(m_player, m_computer, m_ball, m_textures);
+            m_field = std::make_unique<PowerUpField>(m_player, m_computer, m_ball, m_textures, m_sounds);
         }
         else if (nextField >= 75)
         {
-            m_field = std::make_unique<ObstacleField>(m_player, m_computer, m_ball);
+            m_field = std::make_unique<ObstacleField>(m_player, m_computer, m_ball, m_sounds);
         }
     }
     else
@@ -415,7 +428,7 @@ void EndingScreen::updateScreen()
     if (m_playAgainButton.isClicked())
     {
         //finishScreen = 1;     // OPTIONS
-        m_nextScreen = 3;     // GAMEPLAY
+        m_nextScreen = 3;       // GAMEPLAY
         return;
     }
 
@@ -436,11 +449,11 @@ void EndingScreen::drawScreen()
     m_winnerText.Draw(m_winnerTextPos);
     m_playAgainButton.draw();
     m_quitButton.draw();
-    DrawLine(
+   /* DrawLine(
         GetScreenWidth() / 2,
         0.0f,
         GetScreenWidth() / 2,
         GetScreenHeight(),
         RED
-    );
+    );*/
 }

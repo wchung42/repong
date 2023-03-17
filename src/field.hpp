@@ -14,11 +14,14 @@ protected:
 	std::unique_ptr<Computer>& m_computer;
 	std::unique_ptr<Ball>& m_ball;
 	bool m_changeFields {};
+	std::unordered_map<std::string, Sound>& m_sounds;
 public:
 	Field(
 		std::unique_ptr<Player>& player,
 		std::unique_ptr<Computer>& computer,
-		std::unique_ptr<Ball>& ball);
+		std::unique_ptr<Ball>& ball,
+		std::unordered_map<std::string, Sound>& sounds
+	);
 	virtual ~Field();
 	virtual void update(float deltaTime);
 	virtual void draw();
@@ -34,7 +37,8 @@ public:
 	InvertedField(
 		std::unique_ptr<Player>& player,
 		std::unique_ptr<Computer>& computer,
-		std::unique_ptr<Ball>& ball
+		std::unique_ptr<Ball>& ball,
+		std::unordered_map<std::string, Sound>& sounds
 	);
 	~InvertedField();
 	void update(float deltaTime);
@@ -53,7 +57,8 @@ public:
 		std::unique_ptr<Player>& player,
 		std::unique_ptr<Computer>& computer,
 		std::unique_ptr<Ball>& ball,
-		std::unordered_map<std::string, raylib::Texture2DUnmanaged>& textures
+		std::unordered_map<std::string, raylib::Texture2DUnmanaged>& textures,
+		std::unordered_map<std::string, Sound>& sounds
 	);
 	~PowerUpField();
 	void update(float deltaTime);
@@ -71,7 +76,8 @@ public:
 	ObstacleField(
 		std::unique_ptr<Player>& player,
 		std::unique_ptr<Computer>& computer,
-		std::unique_ptr<Ball>& ball
+		std::unique_ptr<Ball>& ball,
+		std::unordered_map<std::string, Sound>& sounds
 	);
 	~ObstacleField();
 	void update(float deltaTime);

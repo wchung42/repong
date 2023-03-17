@@ -5,8 +5,9 @@
 Field::Field(
 	std::unique_ptr<Player>& player,
 	std::unique_ptr<Computer>& computer,
-	std::unique_ptr<Ball>& ball)
-	: m_player(player), m_computer(computer), m_ball(ball)
+	std::unique_ptr<Ball>& ball,
+    std::unordered_map<std::string, Sound>& sounds)
+	: m_player(player), m_computer(computer), m_ball(ball), m_sounds(sounds)
 {
     m_player->invertControls(false);
 }
@@ -23,18 +24,21 @@ void Field::update(float deltaTime)
     if ((m_ball->getPos().GetY() + m_ball->getRadius() >= GetScreenHeight()) ||
         (m_ball->getPos().GetY() - m_ball->getRadius() <= 0))
     {
+        PlaySound(m_sounds["wall_hit"]);
         m_ball->onCollisionWalls();
     }
 
     // Ball collision with left and right walls
     if (m_ball->getPos().GetX() + m_ball->getRadius() >= GetScreenWidth())
     {
+        PlaySound(m_sounds["score"]);
         m_changeFields = true;
         m_player->addScore();
         m_ball->reset();
     }
     else if (m_ball->getPos().GetX() - m_ball->getRadius() <= 0)
     {
+        PlaySound(m_sounds["score"]);
         m_changeFields = true;
         m_computer->addScore();
         m_ball->reset();
@@ -45,6 +49,7 @@ void Field::update(float deltaTime)
     {
         if (m_ball->getVelocity().GetX() < 0)
         {
+            PlaySound(m_sounds["paddle_hit"]);
             m_ball->onCollisionPaddles(m_player->getPos(), m_player->getHeight());
         }
     };
@@ -52,7 +57,10 @@ void Field::update(float deltaTime)
     if (CheckCollisionCircleRec(m_ball->getPos(), m_ball->getRadius(), m_computer->getCollisionRec()))
     {
         if (m_ball->getVelocity().GetX() > 0)
+        {
+            PlaySound(m_sounds["paddle_hit"]);
             m_ball->onCollisionPaddles(m_computer->getPos(), m_computer->getHeight());
+        }
     }
 
     m_player->update(deltaTime);
@@ -97,7 +105,6 @@ void Field::draw()
     };
     computerScore.Draw(computerScorePos);
     
-
     m_ball->draw();
 	m_player->draw();
 	m_computer->draw();
@@ -109,8 +116,9 @@ void Field::draw()
 InvertedField::InvertedField(
     std::unique_ptr<Player>& player,
     std::unique_ptr<Computer>& computer,
-    std::unique_ptr<Ball>& ball
-) : Field(player, computer, ball)
+    std::unique_ptr<Ball>& ball,
+    std::unordered_map<std::string, Sound>& sounds
+) : Field(player, computer, ball, sounds)
 {
     m_player->invertControls(true);
 }
@@ -136,8 +144,9 @@ PowerUpField::PowerUpField(
     std::unique_ptr<Player>& player,
     std::unique_ptr<Computer>& computer,
     std::unique_ptr<Ball>& ball,
-    std::unordered_map<std::string, raylib::Texture2DUnmanaged>& textures
-) : Field(player, computer, ball)
+    std::unordered_map<std::string, raylib::Texture2DUnmanaged>& textures,
+    std::unordered_map<std::string, Sound>& sounds
+) : Field(player, computer, ball, sounds)
 {
     m_powerUpSpawner = std::make_unique<PowerUpSpawner>(textures);
 }
@@ -157,7 +166,7 @@ void PowerUpField::update(float deltaTime)
         // If ball collides with powerup, activate powerup and remove from vector
         if ((*itPowerup)->getCollisionRec().CheckCollision(m_ball->getPos(), m_ball->getRadius()))
         {
-            (*itPowerup)->onCollision(m_ball);
+            (*itPowerup)->onCollision(m_ball, m_sounds);
             m_powerUpSpawner->decrementPowerupCount();
             itPowerup = m_powerups.erase(itPowerup);
         }
@@ -183,8 +192,9 @@ void PowerUpField::draw()
 ObstacleField::ObstacleField(
     std::unique_ptr<Player>& player,
     std::unique_ptr<Computer>& computer,
-    std::unique_ptr<Ball>& ball
-) : Field(player, computer, ball), m_mt((std::random_device())())
+    std::unique_ptr<Ball>& ball,
+    std::unordered_map<std::string, Sound>& sounds
+) : Field(player, computer, ball, sounds), m_mt((std::random_device())())
 {
     // Spawn obstacles
     this->spawnObstacles();
@@ -202,6 +212,7 @@ void ObstacleField::update(float deltaTime)
     {
         if (obstacle.getCollisionRec().CheckCollision(m_ball->getPos(), m_ball->getRadius()))
         {
+            PlaySound(m_sounds["wall_hit"]);
             m_ball->onCollisionObstacles(obstacle);
             obstacle.takeDamage();
             obstacle.getHealth();

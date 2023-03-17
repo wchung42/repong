@@ -38,7 +38,9 @@ raylib::Rectangle PowerUp::getCollisionRec()
 	return rec;
 }
 
-void PowerUp::onCollision(std::unique_ptr<Ball>& ball)
+void PowerUp::onCollision(
+	std::unique_ptr<Ball>& ball,
+	std::unordered_map<std::string, Sound>& sounds)
 {
 
 }
@@ -59,8 +61,11 @@ SpeedPowerUp::~SpeedPowerUp()
 
 }
 
-void SpeedPowerUp::onCollision(std::unique_ptr<Ball>& ball)
+void SpeedPowerUp::onCollision(
+	std::unique_ptr<Ball>& ball,
+	std::unordered_map<std::string, Sound>& sounds)
 {
+	PlaySound(sounds["speed_up"]);
 	ball->setSpeed(ball->getSpeed() * m_speedMultiplier);
 	raylib::Vector2 newVelocity {
 		ball->getVelocity().GetX() * m_speedMultiplier,
@@ -85,8 +90,11 @@ FreezePowerUp::~FreezePowerUp()
 
 }
 
-void FreezePowerUp::onCollision(std::unique_ptr<Ball>& ball)
+void FreezePowerUp::onCollision(
+	std::unique_ptr<Ball>& ball,
+	std::unordered_map<std::string, Sound>& sounds)
 {
+	PlaySound(sounds["freeze"]);
 	ball->freeze(m_freezeDuration);
 }
 
