@@ -37,6 +37,7 @@ void Game::runLoop()
 
 void Game::shutdown()
 {
+    m_font.Unload();
 	m_window.Close();
 }
 
