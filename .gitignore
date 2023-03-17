@@ -1,3 +1,6 @@
 .vs/
 .vscode/
 bin/
+REPong.filters
+REPong.user
+REPong.vcxproj.user
