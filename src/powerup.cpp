@@ -1,5 +1,4 @@
 #include "powerup.hpp"
-#include <iostream>
 
 // Base power up function definitions
 PowerUp::PowerUp()
@@ -101,8 +100,10 @@ void FreezePowerUp::onCollision(
 
 // Powerup spawner function declarations
 PowerUpSpawner::PowerUpSpawner(
-	std::unordered_map<std::string, raylib::Texture2DUnmanaged>& textures
-) : m_textures(textures), m_mt((std::random_device())())
+	std::unordered_map<std::string,
+	raylib::Texture2DUnmanaged>& textures,
+	std::mt19937& mt
+) : m_textures(textures), m_mt(mt)
 {
 	m_spawnRate = 5.0f;
 	m_maxPowerups = 3;

@@ -1,5 +1,5 @@
 #include "screen.hpp"
-#include <iostream>
+#include <time.h>
 
 Screen::Screen() {}
 
@@ -11,6 +11,11 @@ Screen::~Screen()
 void Screen::updateScreen()
 {
 	// Update screen
+    if (WindowShouldClose())
+    {
+        m_nextScreen = 6;
+        return;
+    }
 }
 
 void Screen::drawScreen()
@@ -56,6 +61,8 @@ LogoScreen::~LogoScreen()
 // Logo Screen Update logic
 void LogoScreen::updateScreen()
 {
+    Screen::updateScreen();
+
     if (m_state == 0)                 // State 0: Top-left square corner blink logic
     {
         m_framesCounter++;
@@ -203,6 +210,8 @@ TitleScreen::~TitleScreen()
 // Title Screen Update logic
 void TitleScreen::updateScreen()
 {
+    Screen::updateScreen();     // Check if windows close button is clicked
+
     if (m_playButton.isClicked())
     {
         //finishScreen = 1;     // OPTIONS
@@ -210,7 +219,7 @@ void TitleScreen::updateScreen()
         return;
     }
 
-    if (m_quitButton.isClicked() || WindowShouldClose())
+    if (m_quitButton.isClicked())
     {
         m_nextScreen = 6;     // Exit game
         return;
@@ -263,7 +272,7 @@ void OptionsScreen::drawScreen()
 //----------------------------------------------------------------------------------
 
 GameplayScreen::GameplayScreen(std::string& winner, raylib::Font& font)
-    : m_winner(winner), m_font(font), m_mt((std::random_device())())
+    : m_winner(winner), m_font(font), m_mt(static_cast<unsigned int>(time(nullptr)))
 {
     // Load game textures
     utils::loadTextures({
@@ -282,7 +291,7 @@ GameplayScreen::GameplayScreen(std::string& winner, raylib::Font& font)
 
     m_player = std::make_unique<Player>();
     m_computer = std::make_unique<Computer>();
-    m_ball = std::make_unique<Ball>();
+    m_ball = std::make_unique<Ball>(m_mt);
     m_field = std::make_unique<Field>(m_player, m_computer, m_ball, m_sounds);
 }
 
@@ -304,11 +313,7 @@ GameplayScreen::~GameplayScreen()
 // Gameplay Screen Update logic
 void GameplayScreen::updateScreen()
 {
-    if (WindowShouldClose())
-    {
-        m_nextScreen = 6;       // Exit game
-        return;
-    }
+    Screen::updateScreen();     // Check if windows close button is clicked
 
     if (m_player->getScore() >= 10 || m_computer->getScore() >= 10)
     {
@@ -334,11 +339,11 @@ void GameplayScreen::updateScreen()
         }
         else if (nextField >= 50 && nextField <= 74)
         {
-            m_field = std::make_unique<PowerUpField>(m_player, m_computer, m_ball, m_textures, m_sounds);
+            m_field = std::make_unique<PowerUpField>(m_player, m_computer, m_ball, m_textures, m_sounds, m_mt);
         }
         else if (nextField >= 75)
         {
-            m_field = std::make_unique<ObstacleField>(m_player, m_computer, m_ball, m_sounds);
+            m_field = std::make_unique<ObstacleField>(m_player, m_computer, m_ball, m_sounds, m_mt);
         }
     }
     else
@@ -434,6 +439,8 @@ EndingScreen::~EndingScreen()
 // Ending Screen Update logic
 void EndingScreen::updateScreen()
 {
+    Screen::updateScreen();     // Check if windows close button is clicked
+
     if (m_playAgainButton.isClicked())
     {
         //finishScreen = 1;     // OPTIONS
@@ -441,7 +448,7 @@ void EndingScreen::updateScreen()
         return;
     }
 
-    if (m_quitButton.isClicked() || WindowShouldClose())
+    if (m_quitButton.isClicked())
     {
         m_nextScreen = 6;     // Exit game
         return;

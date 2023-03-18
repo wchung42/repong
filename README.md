@@ -1,6 +1,6 @@
 # RE:pong
 
-![RE:pong](screenshots/screenshot001.png "RE:pong")
+![RE:pong](screenshots/title.png "RE:pong")
 
 ## Description
 
@@ -16,9 +16,11 @@ Keyboard:
 
 ## Screenshots
 
-![Gameplay 1](screenshots/screenshot002.png  "Gameplay 1")
+![Gameplay 1](screenshots/game-001.png  "Normal Field")
 
-![Gameplay 2](screenshots/screenshot003.png  "Gameplay 2")
+![Gameplay 2](screenshots/game-002.png  "Powerup Field")
+
+![Gameplay 3](screenshots/game-003.png  "Obstacle Field")
 
 ## Developers
 
@@ -27,6 +29,10 @@ Keyboard:
 ## Credits
 
  - **Font**: [Modern Sans by Fortress Tech](https://www.dafont.com/font-comment.php?file=modern_sans)
+
+## To Add
+
+ - "Lights out" field where the play field is dark and only the area surrounding the ball is visible.
 
 ## Links
 

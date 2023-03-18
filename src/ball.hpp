@@ -1,6 +1,6 @@
 #pragma once
 
-#include "raylib.h"
+#include "include/raylib.h"
 #include "include/raylib-cpp.hpp"
 #include "obstacle.hpp"
 #include <random>
@@ -13,13 +13,13 @@ private:
 	int m_radius {10};					// Radius
 	float m_baseSpeed {420.0f};			// Base speed
 	float m_speed {m_baseSpeed};		// Current speed
-	std::mt19937 m_mt;
+	std::mt19937& m_mt;
 
 	bool m_frozen {};
 	float m_freezeDuration {};
 	float m_freezeTimer {};
 public:
-	Ball();
+	Ball(std::mt19937& mt);
 	~Ball();
 	void update(float deltaTime);
 	void draw();

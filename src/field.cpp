@@ -1,5 +1,4 @@
 #include "field.hpp"
-#include <iostream>
 
 // Base Field class definitions
 Field::Field(
@@ -130,10 +129,11 @@ PowerUpField::PowerUpField(
     std::unique_ptr<Computer>& computer,
     std::unique_ptr<Ball>& ball,
     std::unordered_map<std::string, raylib::Texture2DUnmanaged>& textures,
-    std::unordered_map<std::string, Sound>& sounds
+    std::unordered_map<std::string, Sound>& sounds,
+    std::mt19937& mt
 ) : Field(player, computer, ball, sounds)
 {
-    m_powerUpSpawner = std::make_unique<PowerUpSpawner>(textures);
+    m_powerUpSpawner = std::make_unique<PowerUpSpawner>(textures, mt);
 }
 
 PowerUpField::~PowerUpField()
@@ -178,8 +178,9 @@ ObstacleField::ObstacleField(
     std::unique_ptr<Player>& player,
     std::unique_ptr<Computer>& computer,
     std::unique_ptr<Ball>& ball,
-    std::unordered_map<std::string, Sound>& sounds
-) : Field(player, computer, ball, sounds), m_mt((std::random_device())())
+    std::unordered_map<std::string, Sound>& sounds,
+    std::mt19937& mt
+) : Field(player, computer, ball, sounds), m_mt(mt)
 {
     // Spawn obstacles
     this->spawnObstacles();
