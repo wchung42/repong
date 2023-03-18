@@ -58,7 +58,8 @@ public:
 		std::unique_ptr<Computer>& computer,
 		std::unique_ptr<Ball>& ball,
 		std::unordered_map<std::string, raylib::Texture2DUnmanaged>& textures,
-		std::unordered_map<std::string, Sound>& sounds
+		std::unordered_map<std::string, Sound>& sounds,
+		std::mt19937& m_mt
 	);
 	~PowerUpField();
 	void update(float deltaTime);
@@ -77,7 +78,8 @@ public:
 		std::unique_ptr<Player>& player,
 		std::unique_ptr<Computer>& computer,
 		std::unique_ptr<Ball>& ball,
-		std::unordered_map<std::string, Sound>& sounds
+		std::unordered_map<std::string, Sound>& sounds,
+		std::mt19937& m_mt
 	);
 	~ObstacleField();
 	void update(float deltaTime);

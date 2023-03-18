@@ -1,6 +1,6 @@
 #pragma once
 
-#include "raylib.h"
+#include "include/raylib.h"
 #include "include/raylib-cpp.hpp"
 #include "ball.hpp"
 #include <unordered_map>
@@ -70,14 +70,18 @@ public:
 class PowerUpSpawner
 {
 private:
-	std::mt19937 m_mt;
+	std::mt19937& m_mt;
 	std::unordered_map<std::string, raylib::Texture2DUnmanaged>& m_textures;
 	float m_spawnRate {};
 	float m_spawnTimer {};
 	int m_maxPowerups {};
 	int m_powerupCount {};
 public:
-	PowerUpSpawner(std::unordered_map<std::string, raylib::Texture2DUnmanaged>& textures);
+	PowerUpSpawner(
+		std::unordered_map<std::string,
+		raylib::Texture2DUnmanaged>& textures,
+		std::mt19937& m_mt
+	);
 	~PowerUpSpawner();
 	void update(float deltaTime, std::vector<std::unique_ptr<PowerUp>>& powerUps);
 	std::unique_ptr<PowerUp> spawnPowerUp();

@@ -1,6 +1,5 @@
 #include "game.hpp"
 #include "screen.hpp"
-#include <iostream>
 #include <memory>
 
 Game::Game() {};

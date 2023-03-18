@@ -4,8 +4,8 @@
 #include "obstacle.hpp"
 #include <iostream>
 
-Ball::Ball()
-	: m_mt((std::random_device())())
+Ball::Ball(std::mt19937& mt)
+	: m_mt(mt)
 {
 	m_pos = raylib::Vector2 {
 		static_cast<float>(GetScreenWidth() / 2),
