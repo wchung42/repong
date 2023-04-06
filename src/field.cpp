@@ -1,4 +1,11 @@
 #include "field.hpp"
+#include "rlgl.h"
+#include "raymath.h"
+#include <iostream>
+
+// constants from OpenGL
+#define GL_SRC_ALPHA 0x0302
+#define GL_MIN 0x8007
 
 // Base Field class definitions
 Field::Field(
@@ -283,4 +290,60 @@ void ObstacleField::spawnObstacles()
 
         m_obstacles.push_back(obstacle);
     }
+}
+
+// -------------------------
+// Lights Out Field
+// -------------------------
+LightsOutField::LightsOutField(
+    std::unique_ptr<Player>& player,
+    std::unique_ptr<Computer>& computer,
+    std::unique_ptr<Ball>& ball,
+    std::unordered_map<std::string, Sound>& sounds
+) : Field(player, computer, ball, sounds)
+{
+    // Make a render texture that we can put a hole into at the mouse pos
+    m_holeTexture = LoadRenderTexture(GetScreenWidth(), GetScreenHeight());
+}
+
+LightsOutField::~LightsOutField()
+{
+    m_holeTexture.Unload();
+}
+
+void LightsOutField::update(float deltaTime)
+{
+    // --------------------------
+    // Update hole around ball
+    // --------------------------
+
+    // Update the hole to be where the mouse is
+    BeginTextureMode(m_holeTexture);
+        ClearBackground(BLACK);
+
+        // Force the blend mode to only set the alpha of the destination
+        rlSetBlendFactors(GL_SRC_ALPHA, GL_SRC_ALPHA, GL_MIN);
+        rlSetBlendMode(BLEND_CUSTOM);
+
+        // Draw a blank 'hole' in our texture around the ball
+        float visionRadius {100.0f};
+        DrawCircle(m_ball->getPos().GetX(), m_ball->getPos().GetY(), visionRadius, BLANK);
+
+        // Go back to normal
+        rlSetBlendMode(BLEND_ALPHA);
+    EndTextureMode();
+
+    // Update field
+    Field::update(deltaTime);
+}
+
+void LightsOutField::draw()
+{
+    // Draw field
+    Field::draw();
+
+    // Draw hole texture
+    Rectangle src {0, 0, GetScreenWidth(), -GetScreenHeight()};
+    Rectangle dest {0, 0, GetScreenWidth(), GetScreenHeight()};
+    DrawTexturePro(m_holeTexture.texture, src, dest, Vector2Zero(), 0, WHITE);
 }
