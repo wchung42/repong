@@ -329,21 +329,25 @@ void GameplayScreen::updateScreen()
     {
         std::uniform_int_distribution<int> distField(0, 100);
         int nextField {distField(m_mt)};
-        if (nextField < 24)
+        if (nextField < 19)
         {
             m_field = std::make_unique<Field>(m_player, m_computer, m_ball, m_sounds);
         }
-        else if (nextField >= 25 && nextField <= 49)
+        else if (nextField >= 20 && nextField <= 39)
         {
             m_field = std::make_unique<InvertedField>(m_player, m_computer, m_ball, m_sounds);
         }
-        else if (nextField >= 50 && nextField <= 74)
+        else if (nextField >= 40 && nextField <= 59)
         {
             m_field = std::make_unique<PowerUpField>(m_player, m_computer, m_ball, m_textures, m_sounds, m_mt);
         }
-        else if (nextField >= 75)
+        else if (nextField >= 60 && nextField <= 79)
         {
             m_field = std::make_unique<ObstacleField>(m_player, m_computer, m_ball, m_sounds, m_mt);
+        }
+        else
+        {
+            m_field = std::make_unique<LightsOutField>(m_player, m_computer, m_ball, m_sounds);
         }
     }
     else

@@ -86,3 +86,23 @@ public:
 	void draw();
 	void spawnObstacles();
 };
+
+
+// -------------------------
+// Lights Out Field
+// -------------------------
+class LightsOutField : public Field
+{
+private:
+	raylib::RenderTexture m_holeTexture;
+public:
+	LightsOutField(
+		std::unique_ptr<Player>& player,
+		std::unique_ptr<Computer>& computer,
+		std::unique_ptr<Ball>& ball,
+		std::unordered_map<std::string, Sound>& sounds
+	);
+	~LightsOutField();
+	void update(float deltaTime);
+	void draw();
+};
