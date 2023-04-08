@@ -4,3 +4,4 @@ bin/
 REPong.filters
 REPong.user
 REPong.vcxproj.user
+.exe

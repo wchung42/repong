@@ -10,7 +10,7 @@ class Ball
 private:
 	raylib::Vector2 m_pos {};			// Position
 	raylib::Vector2 m_velocity {};		// Velocity
-	int m_radius {10};					// Radius
+	int m_radius {12};					// Radius
 	float m_baseSpeed {420.0f};			// Base speed
 	float m_speed {m_baseSpeed};		// Current speed
 	std::mt19937& m_mt;

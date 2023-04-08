@@ -1,5 +1,4 @@
 #include "texture_manager.hpp"
-#include <iostream>
 
 TextureManager::TextureManager()
 {
