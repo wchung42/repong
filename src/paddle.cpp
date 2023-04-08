@@ -20,14 +20,28 @@ void Paddle::update(float deltaTime)
 
 void Paddle::draw()
 {
+	// Outline width
+	float outlineWidth {2.0f};
+
+	// Draw outline rectangle
+	raylib::Rectangle outline {
+		m_pos.GetX() - outlineWidth,
+		m_pos.GetY() - outlineWidth,
+		static_cast<float>(m_width + outlineWidth),
+		static_cast<float>(m_height + outlineWidth),
+	};
+	raylib::Color outlineColor {0, 0, 0, 255};
+	outline.DrawRounded(1.0f, 4, outlineColor);
+
+	// Draw paddle rectangle
 	raylib::Rectangle rec {
 		m_pos.x,
 		m_pos.y,
-		static_cast<float>(m_width), 
-		static_cast<float>(m_height)
+		static_cast<float>(m_width - outlineWidth), 
+		static_cast<float>(m_height - outlineWidth)
 	};
 	raylib::Color darkGreen {6, 48, 39, 255};
-	rec.DrawRounded(1.0f, 8, darkGreen);
+	rec.DrawRounded(1.0f, 4, darkGreen);
 }
 
 raylib::Rectangle Paddle::getCollisionRec()
