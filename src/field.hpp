@@ -4,6 +4,8 @@
 #include "ball.hpp"
 #include "powerup.hpp"
 #include "obstacle.hpp"
+#include "texture_manager.hpp"
+#include "sound_manager.hpp"
 
 
 // Base Field class declarations
@@ -14,13 +16,13 @@ protected:
 	std::unique_ptr<Computer>& m_computer;
 	std::unique_ptr<Ball>& m_ball;
 	bool m_changeFields {};
-	std::unordered_map<std::string, Sound>& m_sounds;
+	SoundManager* m_soundManager;
 public:
 	Field(
 		std::unique_ptr<Player>& player,
 		std::unique_ptr<Computer>& computer,
 		std::unique_ptr<Ball>& ball,
-		std::unordered_map<std::string, Sound>& sounds
+		SoundManager* soundManager
 	);
 	virtual ~Field();
 	virtual void update(float deltaTime);
@@ -38,7 +40,7 @@ public:
 		std::unique_ptr<Player>& player,
 		std::unique_ptr<Computer>& computer,
 		std::unique_ptr<Ball>& ball,
-		std::unordered_map<std::string, Sound>& sounds
+		SoundManager* soundManager
 	);
 	~InvertedField();
 	void update(float deltaTime);
@@ -57,8 +59,8 @@ public:
 		std::unique_ptr<Player>& player,
 		std::unique_ptr<Computer>& computer,
 		std::unique_ptr<Ball>& ball,
-		std::unordered_map<std::string, raylib::Texture2DUnmanaged>& textures,
-		std::unordered_map<std::string, Sound>& sounds,
+		TextureManager* textureManager,
+		SoundManager* soundManager,
 		std::mt19937& m_mt
 	);
 	~PowerUpField();
@@ -78,7 +80,7 @@ public:
 		std::unique_ptr<Player>& player,
 		std::unique_ptr<Computer>& computer,
 		std::unique_ptr<Ball>& ball,
-		std::unordered_map<std::string, Sound>& sounds,
+		SoundManager* soundManager,
 		std::mt19937& m_mt
 	);
 	~ObstacleField();
@@ -100,7 +102,7 @@ public:
 		std::unique_ptr<Player>& player,
 		std::unique_ptr<Computer>& computer,
 		std::unique_ptr<Ball>& ball,
-		std::unordered_map<std::string, Sound>& sounds
+		SoundManager* soundManager
 	);
 	~LightsOutField();
 	void update(float deltaTime);

@@ -3,6 +3,8 @@
 #include "include/raylib.h"
 #include "include/raylib-cpp.hpp"
 #include "ball.hpp"
+#include "texture_manager.hpp"
+#include "sound_manager.hpp"
 #include <unordered_map>
 #include <memory>
 
@@ -26,7 +28,7 @@ public:
 	raylib::Rectangle getCollisionRec();
 	virtual void onCollision(
 		std::unique_ptr<Ball>& ball,
-		std::unordered_map<std::string, Sound>& sounds
+		SoundManager* soundManager
 	);
 };
 
@@ -43,8 +45,9 @@ public:
 		float speedMultiplier
 	);
 	~SpeedPowerUp();
-	void onCollision(std::unique_ptr<Ball>& ball,
-		std::unordered_map<std::string, Sound>& sounds) override;
+	void onCollision(
+		std::unique_ptr<Ball>& ball,
+		SoundManager* soundManager) override;
 };
 
 
@@ -62,7 +65,7 @@ public:
 	~FreezePowerUp();
 	void onCollision(
 		std::unique_ptr<Ball>& ball,
-		std::unordered_map<std::string, Sound>& sounds) override;
+		SoundManager* soundManager) override;
 };
 
 
@@ -71,15 +74,14 @@ class PowerUpSpawner
 {
 private:
 	std::mt19937& m_mt;
-	std::unordered_map<std::string, raylib::Texture2DUnmanaged>& m_textures;
+	TextureManager* m_textureManager;
 	float m_spawnRate {};
 	float m_spawnTimer {};
 	int m_maxPowerups {};
 	int m_powerupCount {};
 public:
 	PowerUpSpawner(
-		std::unordered_map<std::string,
-		raylib::Texture2DUnmanaged>& textures,
+		TextureManager* textureManager,
 		std::mt19937& m_mt
 	);
 	~PowerUpSpawner();

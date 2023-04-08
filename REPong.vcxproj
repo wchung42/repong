@@ -157,6 +157,8 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\powerup.cpp" />
     <ClCompile Include="src\screen.cpp" />
+    <ClCompile Include="src\sound_manager.cpp" />
+    <ClCompile Include="src\texture_manager.cpp" />
     <ClCompile Include="src\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -206,6 +208,8 @@
     <ClInclude Include="src\include\Window.hpp" />
     <ClInclude Include="src\powerup.hpp" />
     <ClInclude Include="src\screen.hpp" />
+    <ClInclude Include="src\sound_manager.hpp" />
+    <ClInclude Include="src\texture_manager.hpp" />
     <ClInclude Include="src\utils.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

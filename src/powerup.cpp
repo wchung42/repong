@@ -1,6 +1,8 @@
 #include "powerup.hpp"
 
+// ---------------------------------------
 // Base power up function definitions
+// ---------------------------------------
 PowerUp::PowerUp()
 {
 
@@ -9,7 +11,8 @@ PowerUp::PowerUp()
 PowerUp::PowerUp(
 	raylib::Texture2DUnmanaged texture,
 	raylib::Vector2 pos
-) : m_texture(texture), m_pos(pos)
+) 
+	: m_texture(texture), m_pos(pos)
 {
 	m_scale = 0.12f;
 	m_width = m_texture.GetWidth() * m_scale;
@@ -39,13 +42,16 @@ raylib::Rectangle PowerUp::getCollisionRec()
 
 void PowerUp::onCollision(
 	std::unique_ptr<Ball>& ball,
-	std::unordered_map<std::string, Sound>& sounds)
+	SoundManager* soundManager
+)
 {
 
 }
 
 
+// ---------------------------------------
 // Speed power up function definitions
+// ---------------------------------------
 SpeedPowerUp::SpeedPowerUp(
 	raylib::Texture2DUnmanaged texture,
 	raylib::Vector2 pos,
@@ -62,9 +68,9 @@ SpeedPowerUp::~SpeedPowerUp()
 
 void SpeedPowerUp::onCollision(
 	std::unique_ptr<Ball>& ball,
-	std::unordered_map<std::string, Sound>& sounds)
+	SoundManager* soundManager)
 {
-	PlaySound(sounds["speed_up"]);
+	soundManager->playSound("speed_up");
 	ball->setSpeed(ball->getSpeed() * m_speedMultiplier);
 	raylib::Vector2 newVelocity {
 		ball->getVelocity().GetX() * m_speedMultiplier,
@@ -74,7 +80,9 @@ void SpeedPowerUp::onCollision(
 }
 
 
-// Freeze power up function deinitions
+// ---------------------------------------
+// Freeze power up function definitions
+// ---------------------------------------
 FreezePowerUp::FreezePowerUp(
 	raylib::Texture2DUnmanaged texture,
 	raylib::Vector2 pos,
@@ -91,19 +99,21 @@ FreezePowerUp::~FreezePowerUp()
 
 void FreezePowerUp::onCollision(
 	std::unique_ptr<Ball>& ball,
-	std::unordered_map<std::string, Sound>& sounds)
+	SoundManager* soundManager)
 {
-	PlaySound(sounds["freeze"]);
+	soundManager->playSound("freeze");
 	ball->freeze(m_freezeDuration);
 }
 
 
-// Powerup spawner function declarations
+// ---------------------------------------
+// Power up spawner function definitions
+// ---------------------------------------
 PowerUpSpawner::PowerUpSpawner(
-	std::unordered_map<std::string,
-	raylib::Texture2DUnmanaged>& textures,
+	TextureManager* textureManager,
 	std::mt19937& mt
-) : m_textures(textures), m_mt(mt)
+) 
+	: m_textureManager(textureManager), m_mt(mt)
 {
 	m_spawnRate = 5.0f;
 	m_maxPowerups = 3;
@@ -150,14 +160,14 @@ std::unique_ptr<PowerUp> PowerUpSpawner::spawnPowerUp()
 		// Get speed multiplier
 		std::uniform_real_distribution<float> multiplierDist(1.25f, 2.0f);
 		float speedMultiplier {multiplierDist(m_mt)};
-		powerup = std::make_unique<SpeedPowerUp>(m_textures["speed_up"], spawnPos, speedMultiplier);
+		powerup = std::make_unique<SpeedPowerUp>(m_textureManager->getTexture("speed_up"), spawnPos, speedMultiplier);
 	}
 	else if (powerUpToSpawn >= 50)
 	{
 		// Get random freeze duration
 		std::uniform_real_distribution<float> freezeDurationDist(1.5f, 3.0f);
 		float freezeDuration {freezeDurationDist(m_mt)};
-		powerup = std::make_unique<FreezePowerUp>(m_textures["freeze"], spawnPos, freezeDuration);
+		powerup = std::make_unique<FreezePowerUp>(m_textureManager->getTexture("freeze"), spawnPos, freezeDuration);
 	}
 
 	return powerup;

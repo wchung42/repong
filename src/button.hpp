@@ -19,7 +19,7 @@ public:
 	Button();
 	Button(
 		raylib::Vector2 pos,
-		raylib::Texture2DUnmanaged& texture,
+		const raylib::Texture2DUnmanaged& texture,
 		float scale = 1.0f
 	);
 	~Button();
