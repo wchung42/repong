@@ -1,7 +1,19 @@
 #include "screen.hpp"
 #include <time.h>
 
+//----------------------------------------------------------------------------------
+// Base Screen Functions Definition
+//----------------------------------------------------------------------------------
+
 Screen::Screen() {}
+
+Screen::Screen(
+    std::unique_ptr<TextureManager>& textureManager,
+    std::unique_ptr<SoundManager>& soundManager
+) : m_textureManager(textureManager.get()), m_soundManager(soundManager.get())
+{
+
+}
 
 Screen::~Screen() 
 {
@@ -159,52 +171,52 @@ void LogoScreen::drawScreen()
 // Title Screen Functions Definition
 //----------------------------------------------------------------------------------
 
-TitleScreen::TitleScreen(raylib::Font& font)
-    : m_font(font)
+TitleScreen::TitleScreen(
+    raylib::Font& font,
+    std::unique_ptr<TextureManager>& textureManager,
+    std::unique_ptr<SoundManager>& soundManager
+)    : m_font(font), Screen(textureManager, soundManager)
 {
-    utils::loadTextures({
+    m_textureManager->loadTextures(std::vector<std::string> {
         "./src/resources/textures/title.png",
         "./src/resources/textures/play_button.png",
         "./src/resources/textures/quit_button.png"
-    }, m_textures);
+    });
 
-    // Draw title
-    m_title = m_textures["title"];
+    // Calculate position of title and buttons
     m_titlePos = raylib::Vector2 {
-        static_cast<float>(GetScreenWidth() / 2 - m_textures["title"].GetWidth() / 2),
+        static_cast<float>(GetScreenWidth() / 2 - m_textureManager->getTexture("title").GetWidth() / 2),
         static_cast<float>(GetScreenHeight() * 0.20f)
     };
 
     float buttonScale {0.9};
     float titleButtonSpacing {25.0f};
     raylib::Vector2 playButtonPos {
-        static_cast<float>(GetScreenWidth() / 2 - m_textures["play_button"].GetWidth() * buttonScale / 2),
-        static_cast<float>(m_titlePos.GetY() + m_textures["title"].GetHeight() + titleButtonSpacing)
+        static_cast<float>(GetScreenWidth() / 2 - m_textureManager->getTexture("play_button").GetWidth() * buttonScale / 2),
+        static_cast<float>(m_titlePos.GetY() + m_textureManager->getTexture("title").GetHeight() + titleButtonSpacing)
     };
     m_playButton = Button {
         playButtonPos,
-        m_textures["play_button"],
+        m_textureManager->getTexture("play_button"),
         buttonScale
     };
 
     float buttonSpacing {20.0f};
     raylib::Vector2 quitButtonPos {
-        static_cast<float>(GetScreenWidth() / 2 - m_textures["play_button"].GetWidth() * buttonScale / 2),
+        static_cast<float>(GetScreenWidth() / 2 - m_textureManager->getTexture("play_button").GetWidth() * buttonScale / 2),
         static_cast<float>(m_playButton.getPos().GetY() + m_playButton.getHeight() - buttonSpacing)
     };
     m_quitButton = Button {
         quitButtonPos,
-        m_textures["quit_button"],
+        m_textureManager->getTexture("quit_button"),
         buttonScale
     };
 }
 
 TitleScreen::~TitleScreen()
 {
-    for (auto& [name, texture] : m_textures)
-    {
-        texture.Unload();
-    }
+    // Unload textures
+    m_textureManager->unloadTextures(std::vector<std::string> {"title", "play_button", "quit_button"});
 }
 
 // Title Screen Update logic
@@ -233,10 +245,9 @@ void TitleScreen::updateScreen()
 void TitleScreen::drawScreen()
 {
     Screen::drawScreen();
-    m_title.Draw(m_titlePos, 0.0f, 1.0f, WHITE);
+    m_textureManager->getTexture("title").Draw(m_titlePos, 0.0f, 1.0f, WHITE);
     m_playButton.draw();
     m_quitButton.draw();
-    
 }
 
 
@@ -244,7 +255,10 @@ void TitleScreen::drawScreen()
 // Options Screen Functions Definition
 //----------------------------------------------------------------------------------
 
-OptionsScreen::OptionsScreen()
+OptionsScreen::OptionsScreen(
+    std::unique_ptr<TextureManager>& textureManager,
+    std::unique_ptr<SoundManager>& soundManager
+)   : Screen(textureManager, soundManager)
 {
 
 }
@@ -271,43 +285,39 @@ void OptionsScreen::drawScreen()
 // Gameplay Screen Functions Definition
 //----------------------------------------------------------------------------------
 
-GameplayScreen::GameplayScreen(std::string& winner, raylib::Font& font)
-    : m_winner(winner), m_font(font), m_mt(static_cast<unsigned int>(time(nullptr)))
+GameplayScreen::GameplayScreen(
+    std::string& winner,
+    raylib::Font& font,
+    std::unique_ptr<TextureManager>& textureManager,
+    std::unique_ptr<SoundManager>& soundManager
+)   
+    : Screen(textureManager, soundManager), m_winner(winner), m_font(font), m_mt(static_cast<unsigned int>(time(nullptr)))
 {
     // Load game textures
-    utils::loadTextures({
+    m_textureManager->loadTextures(std::vector<std::string> {
         "./src/resources/textures/freeze.png",
         "./src/resources/textures/speed_up.png"
-    }, m_textures);
+    });
 
     // Load sounds
-    utils::loadSounds({
+    m_soundManager->loadSounds(std::vector<std::string> {
         "./src/resources/sfx/freeze.wav",
         "./src/resources/sfx/paddle_hit.wav",
         "./src/resources/sfx/score.wav",
         "./src/resources/sfx/speed.wav",
         "./src/resources/sfx/wall_hit.wav"
-    }, m_sounds);
+    });
 
     m_player = std::make_unique<Player>();
     m_computer = std::make_unique<Computer>();
     m_ball = std::make_unique<Ball>(m_mt);
-    m_field = std::make_unique<Field>(m_player, m_computer, m_ball, m_sounds);
+    m_field = std::make_unique<Field>(m_player, m_computer, m_ball, m_soundManager);
 }
 
 GameplayScreen::~GameplayScreen()
 {
     // Unload resources
-    for (auto& [name, texture] : m_textures)
-    {
-        texture.Unload();
-    }
-
-    // Unload sounds
-    for (auto& [name, sound] : m_sounds)
-    {
-        UnloadSound(sound);
-    }
+    m_textureManager->unloadTextures({"freeze", "speed_up"});
 }
 
 // Gameplay Screen Update logic
@@ -315,9 +325,9 @@ void GameplayScreen::updateScreen()
 {
     Screen::updateScreen();     // Check if windows close button is clicked
 
-    if (m_player->getScore() >= 10 || m_computer->getScore() >= 10)
+    if (m_player->getScore() >= m_maxScore || m_computer->getScore() >= m_maxScore)
     {
-        m_winner = m_player->getScore() >= 10 ? "player" : "computer";
+        m_winner = m_player->getScore() >= m_maxScore ? "player" : "computer";
         m_nextScreen = ENDING;
         return;
     }
@@ -331,23 +341,23 @@ void GameplayScreen::updateScreen()
         int nextField {distField(m_mt)};
         if (nextField < 19)
         {
-            m_field = std::make_unique<Field>(m_player, m_computer, m_ball, m_sounds);
+            m_field = std::make_unique<Field>(m_player, m_computer, m_ball, m_soundManager);
         }
         else if (nextField >= 20 && nextField <= 39)
         {
-            m_field = std::make_unique<InvertedField>(m_player, m_computer, m_ball, m_sounds);
+            m_field = std::make_unique<InvertedField>(m_player, m_computer, m_ball, m_soundManager);
         }
         else if (nextField >= 40 && nextField <= 59)
         {
-            m_field = std::make_unique<PowerUpField>(m_player, m_computer, m_ball, m_textures, m_sounds, m_mt);
+            m_field = std::make_unique<PowerUpField>(m_player, m_computer, m_ball, m_textureManager, m_soundManager, m_mt);
         }
         else if (nextField >= 60 && nextField <= 79)
         {
-            m_field = std::make_unique<ObstacleField>(m_player, m_computer, m_ball, m_sounds, m_mt);
+            m_field = std::make_unique<ObstacleField>(m_player, m_computer, m_ball, m_soundManager, m_mt);
         }
         else
         {
-            m_field = std::make_unique<LightsOutField>(m_player, m_computer, m_ball, m_sounds);
+            m_field = std::make_unique<LightsOutField>(m_player, m_computer, m_ball, m_soundManager);
         }
     }
     else
@@ -383,14 +393,19 @@ void GameplayScreen::drawScreen()
 // Ending Screen Functions Definition
 //----------------------------------------------------------------------------------
 
-EndingScreen::EndingScreen(std::string& winner, raylib::Font& font)
-    : m_winner(winner), m_font(font)
+EndingScreen::EndingScreen(
+    std::string& winner,
+    raylib::Font& font,
+    std::unique_ptr<TextureManager>& textureManager,
+    std::unique_ptr<SoundManager>& soundManager
+)   
+    : Screen(textureManager, soundManager), m_winner(winner), m_font(font)
 {
     // Load resources
-    utils::loadTextures({
+    m_textureManager->loadTextures({
         "./src/resources/textures/play_again_button.png",
         "./src/resources/textures/quit_button.png"
-    }, m_textures);
+    });
 
     std::string winText {};
     if (m_winner == "player")
@@ -398,6 +413,7 @@ EndingScreen::EndingScreen(std::string& winner, raylib::Font& font)
     else
         winText = "Computer wins!";
 
+    // Calculate text and button positions
     m_winnerText = raylib::Text {
         std::string {winText},
         100.0f,
@@ -416,17 +432,17 @@ EndingScreen::EndingScreen(std::string& winner, raylib::Font& font)
     float buttonScale {0.9f};
     m_playAgainButton = Button {
         raylib::Vector2 {
-            static_cast<float>(GetScreenWidth() / 2 - m_textures["play_again_button"].GetWidth() * buttonScale / 2),
-            m_winnerTextPos.GetY() + winnerTextSize.GetY() + textButtonSpacing},
-        m_textures["play_again_button"],
+            static_cast<float>(GetScreenWidth() / 2 - m_textureManager->getTexture("play_again_button").GetWidth() * buttonScale / 2),
+            static_cast<float>(m_winnerTextPos.GetY() + winnerTextSize.GetY() + textButtonSpacing)},
+        m_textureManager->getTexture("play_again_button"),
         buttonScale
     };
 
     m_quitButton = Button {
         raylib::Vector2 {
-            static_cast<float>(GetScreenWidth() / 2 - m_textures["quit_button"].GetWidth() * buttonScale / 2),
+            static_cast<float>(GetScreenWidth() / 2 - m_textureManager->getTexture("quit_button").GetWidth() * buttonScale / 2),
             static_cast<float>(m_playAgainButton.getPos().GetY() + m_playAgainButton.getHeight() - buttonSpacing)},
-        m_textures["quit_button"],
+        m_textureManager->getTexture("quit_button"),
         buttonScale
     };
 }
@@ -434,10 +450,7 @@ EndingScreen::EndingScreen(std::string& winner, raylib::Font& font)
 EndingScreen::~EndingScreen()
 {
     // Unload resources
-    for (auto& [name, texture] : m_textures)
-    {
-        texture.Unload();
-    }
+    m_textureManager->unloadTextures({"play_again_button", "quit_button"});
 }
 
 // Ending Screen Update logic

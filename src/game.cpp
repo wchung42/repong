@@ -1,8 +1,13 @@
 #include "game.hpp"
 #include "screen.hpp"
 #include <memory>
+#include <iostream>
 
-Game::Game() {};
+Game::Game() 
+{
+    m_textureManager = std::make_unique<TextureManager>();
+    m_soundManager = std::make_unique<SoundManager>();
+};
 
 Game::~Game() {};
 
@@ -119,15 +124,15 @@ void Game::changeToScreen(GameScreen screen)
         } break;
         case TITLE:
         {
-            m_screen = std::make_unique<TitleScreen>(m_font);
+            m_screen = std::make_unique<TitleScreen>(m_font, m_textureManager, m_soundManager);
         } break;
         case GAMEPLAY: 
         {
-            m_screen = std::make_unique<GameplayScreen>(m_winner, m_font);
+            m_screen = std::make_unique<GameplayScreen>(m_winner, m_font, m_textureManager, m_soundManager);
         } break;
         case ENDING: 
         {
-            m_screen = std::make_unique<EndingScreen>(m_winner, m_font);
+            m_screen = std::make_unique<EndingScreen>(m_winner, m_font, m_textureManager, m_soundManager);
         } break;
         case EXIT:
         {
@@ -170,15 +175,15 @@ void Game::updateTransition(void)
                 } break;
                 case TITLE:
                 {
-                    m_screen = std::make_unique<TitleScreen>(m_font);
+                    m_screen = std::make_unique<TitleScreen>(m_font, m_textureManager, m_soundManager);
                 } break;
                 case GAMEPLAY:
                 {
-                    m_screen = std::make_unique<GameplayScreen>(m_winner, m_font);
+                    m_screen = std::make_unique<GameplayScreen>(m_winner, m_font, m_textureManager, m_soundManager);
                 } break;
                 case ENDING:
                 {
-                    m_screen = std::make_unique<EndingScreen>(m_winner, m_font);
+                    m_screen = std::make_unique<EndingScreen>(m_winner, m_font, m_textureManager, m_soundManager);
                 } break;
                 default: break;
             }

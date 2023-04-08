@@ -6,20 +6,30 @@
 #include "field.hpp"
 #include "utils.hpp"
 #include "button.hpp"
+#include "texture_manager.hpp"
+#include "sound_manager.hpp"
 
-//----------------------------------------------------------------------------------
-// Types and Structures Definition
-//----------------------------------------------------------------------------------
+//-------------------------------------
+// Type Definitions
+//-------------------------------------
 typedef enum GameScreen { UNKNOWN = -1, LOGO = 0, TITLE, OPTIONS, GAMEPLAY, ENDING, EXIT } GameScreen;
 
-// Base Screen class declaration
+//-------------------------------------
+// Base Screen Declaration
+//-------------------------------------
 class Screen
 {
 protected:
 	int m_framesCounter {};
 	int m_nextScreen {};
+	TextureManager* m_textureManager {nullptr};
+	SoundManager* m_soundManager {nullptr};
 public:
 	Screen();
+	Screen(
+		std::unique_ptr<TextureManager>& textureManager,
+		std::unique_ptr<SoundManager>& soundManager
+	);
 	virtual ~Screen();
 	virtual void updateScreen();
 	virtual void drawScreen();
@@ -29,7 +39,9 @@ public:
 };
 
 
-// Logo screen class declaration
+//-------------------------------------
+// Logo Screen Declaration
+//-------------------------------------
 class LogoScreen : public Screen
 {
 private:
@@ -50,18 +62,25 @@ public:
 };
 
 
-// Options screen class declaration
+//-------------------------------------
+// Options Screen Declaration
+//-------------------------------------
 class OptionsScreen : public Screen
 {
 public:
-	OptionsScreen();
+	OptionsScreen(
+		std::unique_ptr<TextureManager>& textureManager,
+		std::unique_ptr<SoundManager>& soundManager
+	);
 	~OptionsScreen();
 	void updateScreen();
 	void drawScreen();
 };
 
 
-// Title screen class declaration
+//-------------------------------------
+// Title Screen Declaration
+//-------------------------------------
 class TitleScreen : public Screen
 {
 private:
@@ -72,14 +91,20 @@ private:
 	Button m_playButton;
 	Button m_quitButton;
 public:
-	TitleScreen(raylib::Font& m_font);
+	TitleScreen(
+		raylib::Font& m_font,
+		std::unique_ptr<TextureManager>& textureManager,
+		std::unique_ptr<SoundManager>& soundManager
+	);
 	~TitleScreen();
 	void updateScreen();
 	void drawScreen();
 };
 
 
-// Gameplay screen class declaration
+//-------------------------------------
+// Gameplay Screen Declaration
+//-------------------------------------
 class GameplayScreen : public Screen
 {
 private:
@@ -88,23 +113,28 @@ private:
 	std::unique_ptr<Ball> m_ball;
 	std::unique_ptr<Field> m_field;
 	std::mt19937 m_mt;
-	std::unordered_map<std::string, raylib::Texture2DUnmanaged> m_textures;
-	std::unordered_map<std::string, Sound> m_sounds;
 	std::string& m_winner;
 	raylib::Font& m_font;
+	int m_maxScore {8};
 public:
-	GameplayScreen(std::string& winner, raylib::Font& font);
+	GameplayScreen(
+		std::string& winner,
+		raylib::Font& font,
+		std::unique_ptr<TextureManager>& textureManager,
+		std::unique_ptr<SoundManager>& soundManager
+	);
 	~GameplayScreen();
 	void updateScreen();
 	void drawScreen();
 };
 
 
-// Ending screen class declaration
+//-------------------------------------
+// Ending Screen Declaration
+//-------------------------------------
 class EndingScreen : public Screen
 {
 private:
-	std::unordered_map<std::string, raylib::Texture2DUnmanaged> m_textures;
 	std::string m_winner;
 	raylib::Text m_winnerText;
 	raylib::Vector2 m_winnerTextPos;
@@ -112,7 +142,12 @@ private:
 	Button m_quitButton;
 	raylib::Font& m_font;
 public:
-	EndingScreen(std::string& winner, raylib::Font& m_font);
+	EndingScreen(
+		std::string& winner,
+		raylib::Font& m_font,
+		std::unique_ptr<TextureManager>& textureManager,
+		std::unique_ptr<SoundManager>& soundManager
+	);
 	~EndingScreen();
 	void updateScreen();
 	void drawScreen();

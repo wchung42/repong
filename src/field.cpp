@@ -12,8 +12,9 @@ Field::Field(
 	std::unique_ptr<Player>& player,
 	std::unique_ptr<Computer>& computer,
 	std::unique_ptr<Ball>& ball,
-    std::unordered_map<std::string, Sound>& sounds)
-	: m_player(player), m_computer(computer), m_ball(ball), m_sounds(sounds)
+    SoundManager* soundManager
+)
+	: m_player(player), m_computer(computer), m_ball(ball), m_soundManager(soundManager)
 {
     m_player->invertControls(false);
 }
@@ -30,21 +31,21 @@ void Field::update(float deltaTime)
     if ((m_ball->getPos().GetY() + m_ball->getRadius() >= GetScreenHeight()) ||
         (m_ball->getPos().GetY() - m_ball->getRadius() <= 0))
     {
-        PlaySound(m_sounds["wall_hit"]);
+        m_soundManager->playSound("wall_hit");
         m_ball->onCollisionWalls();
     }
 
     // Ball collision with left and right walls
     if (m_ball->getPos().GetX() + m_ball->getRadius() >= GetScreenWidth())
     {
-        PlaySound(m_sounds["score"]);
+        m_soundManager->playSound("score");
         m_changeFields = true;
         m_player->addScore();
         m_ball->reset();
     }
     else if (m_ball->getPos().GetX() - m_ball->getRadius() <= 0)
     {
-        PlaySound(m_sounds["score"]);
+        m_soundManager->playSound("score");
         m_changeFields = true;
         m_computer->addScore();
         m_ball->reset();
@@ -55,7 +56,7 @@ void Field::update(float deltaTime)
     {
         if (m_ball->getVelocity().GetX() < 0)
         {
-            PlaySound(m_sounds["paddle_hit"]);
+            m_soundManager->playSound("paddle_hit");
             m_ball->onCollisionPaddles(m_player->getPos(), m_player->getHeight());
         }
     };
@@ -64,7 +65,7 @@ void Field::update(float deltaTime)
     {
         if (m_ball->getVelocity().GetX() > 0)
         {
-            PlaySound(m_sounds["paddle_hit"]);
+            m_soundManager->playSound("paddle_hit");
             m_ball->onCollisionPaddles(m_computer->getPos(), m_computer->getHeight());
         }
     }
@@ -108,8 +109,8 @@ InvertedField::InvertedField(
     std::unique_ptr<Player>& player,
     std::unique_ptr<Computer>& computer,
     std::unique_ptr<Ball>& ball,
-    std::unordered_map<std::string, Sound>& sounds
-) : Field(player, computer, ball, sounds)
+    SoundManager* soundManager
+) : Field(player, computer, ball, soundManager)
 {
     m_player->invertControls(true);
 }
@@ -135,12 +136,12 @@ PowerUpField::PowerUpField(
     std::unique_ptr<Player>& player,
     std::unique_ptr<Computer>& computer,
     std::unique_ptr<Ball>& ball,
-    std::unordered_map<std::string, raylib::Texture2DUnmanaged>& textures,
-    std::unordered_map<std::string, Sound>& sounds,
+    TextureManager* textureManager,
+    SoundManager* soundManager,
     std::mt19937& mt
-) : Field(player, computer, ball, sounds)
+) : Field(player, computer, ball, soundManager)
 {
-    m_powerUpSpawner = std::make_unique<PowerUpSpawner>(textures, mt);
+    m_powerUpSpawner = std::make_unique<PowerUpSpawner>(textureManager, mt);
 }
 
 PowerUpField::~PowerUpField()
@@ -158,7 +159,7 @@ void PowerUpField::update(float deltaTime)
         // If ball collides with powerup, activate powerup and remove from vector
         if ((*itPowerup)->getCollisionRec().CheckCollision(m_ball->getPos(), m_ball->getRadius()))
         {
-            (*itPowerup)->onCollision(m_ball, m_sounds);
+            (*itPowerup)->onCollision(m_ball, m_soundManager);
             m_powerUpSpawner->decrementPowerupCount();
             itPowerup = m_powerups.erase(itPowerup);
         }
@@ -185,9 +186,10 @@ ObstacleField::ObstacleField(
     std::unique_ptr<Player>& player,
     std::unique_ptr<Computer>& computer,
     std::unique_ptr<Ball>& ball,
-    std::unordered_map<std::string, Sound>& sounds,
+    SoundManager* soundManager,
     std::mt19937& mt
-) : Field(player, computer, ball, sounds), m_mt(mt)
+)   
+    : Field(player, computer, ball, soundManager), m_mt(mt)
 {
     // Spawn obstacles
     this->spawnObstacles();
@@ -205,7 +207,7 @@ void ObstacleField::update(float deltaTime)
     {
         if (obstacle.getCollisionRec().CheckCollision(m_ball->getPos(), m_ball->getRadius()))
         {
-            PlaySound(m_sounds["wall_hit"]);
+            m_soundManager->playSound("wall_hit");
             m_ball->onCollisionObstacles(obstacle);
             obstacle.takeDamage();
             obstacle.getHealth();
@@ -299,8 +301,8 @@ LightsOutField::LightsOutField(
     std::unique_ptr<Player>& player,
     std::unique_ptr<Computer>& computer,
     std::unique_ptr<Ball>& ball,
-    std::unordered_map<std::string, Sound>& sounds
-) : Field(player, computer, ball, sounds)
+    SoundManager* soundManager
+) : Field(player, computer, ball, soundManager)
 {
     // Make a render texture that we can put a hole into at the mouse pos
     m_holeTexture = LoadRenderTexture(GetScreenWidth(), GetScreenHeight());
