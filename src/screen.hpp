@@ -115,7 +115,7 @@ private:
 	std::mt19937 m_mt;
 	std::string& m_winner;
 	raylib::Font& m_font;
-	int m_maxScore {1};
+	int m_maxScore {8};
 public:
 	GameplayScreen(
 		std::string& winner,
