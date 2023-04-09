@@ -39,8 +39,11 @@ void Ball::update(float deltaTime)
 
 void Ball::draw()
 {
+	raylib::Color outlineColor {0, 0, 0, 255};
+	m_pos.DrawCircle(m_radius, outlineColor);
 	raylib::Color darkYellow {255, 204, 0, 255};
-	m_pos.DrawCircle(m_radius, darkYellow);
+	m_pos.DrawCircle(m_radius - 2.0f, darkYellow);
+	
 }
 
 void Ball::reset()

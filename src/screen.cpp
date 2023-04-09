@@ -186,11 +186,11 @@ TitleScreen::TitleScreen(
     // Calculate position of title and buttons
     m_titlePos = raylib::Vector2 {
         static_cast<float>(GetScreenWidth() / 2 - m_textureManager->getTexture("title").GetWidth() / 2),
-        static_cast<float>(GetScreenHeight() * 0.20f)
+        static_cast<float>(GetScreenHeight() * 0.2f)
     };
 
     float buttonScale {0.9};
-    float titleButtonSpacing {25.0f};
+    float titleButtonSpacing {-5.0f};
     raylib::Vector2 playButtonPos {
         static_cast<float>(GetScreenWidth() / 2 - m_textureManager->getTexture("play_button").GetWidth() * buttonScale / 2),
         static_cast<float>(m_titlePos.GetY() + m_textureManager->getTexture("title").GetHeight() + titleButtonSpacing)
@@ -201,7 +201,7 @@ TitleScreen::TitleScreen(
         buttonScale
     };
 
-    float buttonSpacing {20.0f};
+    float buttonSpacing {25.0f};
     raylib::Vector2 quitButtonPos {
         static_cast<float>(GetScreenWidth() / 2 - m_textureManager->getTexture("play_button").GetWidth() * buttonScale / 2),
         static_cast<float>(m_playButton.getPos().GetY() + m_playButton.getHeight() - buttonSpacing)
@@ -483,6 +483,7 @@ void EndingScreen::drawScreen()
     m_winnerText.Draw(m_winnerTextPos);
     m_playAgainButton.draw();
     m_quitButton.draw();
+
    /* DrawLine(
         GetScreenWidth() / 2,
         0.0f,
