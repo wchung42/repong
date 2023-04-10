@@ -11,12 +11,15 @@ private:
 	raylib::Texture2DUnmanaged m_texture;	// Texture
 	raylib::Vector2 m_pos {};				// Position
 	raylib::Vector2 m_velocity {};			// Velocity
-	float m_width {};						
+	float m_maxXVelocity {2000.0f};
+	float m_maxYVelocity {2000.0f};
+	float m_width {};
 	float m_height {};
 	float m_radius {};
 	float m_scale {};
-	float m_baseSpeed {420.0f};				// Base speed
-	float m_speed {m_baseSpeed};			// Current speed
+	float m_baseSpeed {500.0f};			// Base speed
+	float m_speed {m_baseSpeed};		// Current speed
+	float m_maxSpeed {1250.0f};			// Max speed
 	std::mt19937& m_mt;
 
 	bool m_frozen {};
@@ -39,7 +42,5 @@ public:
 	void onCollisionPaddles(raylib::Vector2 paddlePos, int paddleHeight);
 	void onCollisionWalls();
 	void onCollisionObstacles(const Obstacle& obstacle);
-	void changeXVelocityDirection();
-	void changeYVelocityDirection();
 	void freeze(float freezeDuration);
 };

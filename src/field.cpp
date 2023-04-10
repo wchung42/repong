@@ -30,8 +30,8 @@ void Field::update(float deltaTime)
     float ballRadius {m_ball->getRadius()};
 
     // Ball collision with top and bottom walls
-    if ((ballCenterPos.GetY() + ballRadius >= GetScreenHeight()) ||
-        (ballCenterPos.GetY() - ballRadius <= 0))
+    if ((ballCenterPos.GetY() + ballRadius >= GetScreenHeight() - 3) ||
+        (ballCenterPos.GetY() - ballRadius <= 3))
     {
         m_soundManager->playSound("wall_hit");
         m_ball->onCollisionWalls();

@@ -2,7 +2,6 @@
 #include <cmath>
 #include "ball.hpp"
 #include "obstacle.hpp"
-#include <iostream>
 
 Ball::Ball(const raylib::Texture2DUnmanaged& texture, std::mt19937& mt)
 	: m_texture(texture), m_mt(mt)
@@ -22,6 +21,20 @@ Ball::~Ball() {}
 
 void Ball::update(float deltaTime)
 {
+	// Limit speed to max speed
+	if (m_speed > m_maxSpeed)
+		m_speed = m_maxSpeed;
+
+	// Limit velocity to max velocity
+	if (abs(m_velocity.GetX()) > m_maxXVelocity)
+	{
+		m_velocity.x = m_velocity.GetX() > 0 ? m_maxXVelocity : -m_maxXVelocity;
+	}
+	else if (abs(m_velocity.GetY()) > m_maxYVelocity)
+	{
+		m_velocity.y = m_velocity.GetY() > 0 ? m_maxYVelocity : -m_maxYVelocity;
+	}
+
 	if (m_frozen)
 	{
 		// Zero velocity
@@ -96,16 +109,17 @@ void Ball::onCollisionPaddles(raylib::Vector2 paddlePos, int paddleHeight)
 void Ball::onCollisionWalls()
 {
 	m_speed *= 1.05f;			// Increase speed magnitude by 5 percent on collision
-	m_velocity.x * 1.05f;		// Increase velocity x by 5 percent
+	m_velocity.x *= 1.05f;		// Increase velocity x by 5 percent
 	m_velocity.y *= -1.05f;		// Increase velocity y by 5 percent and change directions
 }
 
 void Ball::onCollisionObstacles(const Obstacle& obstacle)
 {
-	if ((this->m_pos.GetY() >= obstacle.getPos().GetY() + this->m_radius ||
-		this->m_pos.GetY() <= obstacle.getPos().GetY() - this->m_radius) &&
-		(this->m_pos.GetX() >= obstacle.getPos().GetX() && 
-		this->m_pos.GetX() <= obstacle.getPos().GetX() + obstacle.getSize().x))
+	raylib::Vector2 ballCenterPos {this->getCenterPos()};
+	if ((ballCenterPos.GetY() >= obstacle.getPos().GetY() + this->m_radius ||
+		ballCenterPos.GetY() <= obstacle.getPos().GetY() + obstacle.getSize().GetY() - this->m_radius) &&
+		(ballCenterPos.GetX() >= obstacle.getPos().GetX() &&
+		ballCenterPos.GetX() <= obstacle.getPos().GetX() + obstacle.getSize().x))
 	{
 		m_velocity.y *= -1;
 	}
@@ -113,17 +127,6 @@ void Ball::onCollisionObstacles(const Obstacle& obstacle)
 	{
 		m_velocity.x *= -1;
 	}
-
-}
-
-void Ball::changeXVelocityDirection()
-{
-	m_velocity.x *= -1;
-}
-
-void Ball::changeYVelocityDirection()
-{
-	m_velocity.y *= -1;
 }
 
 void Ball::freeze(float freezeDuration)
