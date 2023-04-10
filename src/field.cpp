@@ -1,7 +1,6 @@
 #include "field.hpp"
-#include "rlgl.h"
-#include "raymath.h"
-#include <iostream>
+#include "include/rlgl.h"
+#include "include/raymath.h"
 
 // constants from OpenGL
 #define GL_SRC_ALPHA 0x0302
@@ -27,23 +26,26 @@ void Field::update(float deltaTime)
     // Handle collisions 
     //----------------------------------------------------------------
 
+    raylib::Vector2 ballCenterPos {m_ball->getCenterPos()};
+    float ballRadius {m_ball->getRadius()};
+
     // Ball collision with top and bottom walls
-    if ((m_ball->getPos().GetY() + m_ball->getRadius() >= GetScreenHeight()) ||
-        (m_ball->getPos().GetY() - m_ball->getRadius() <= 0))
+    if ((ballCenterPos.GetY() + ballRadius >= GetScreenHeight()) ||
+        (ballCenterPos.GetY() - ballRadius <= 0))
     {
         m_soundManager->playSound("wall_hit");
         m_ball->onCollisionWalls();
     }
 
     // Ball collision with left and right walls
-    if (m_ball->getPos().GetX() + m_ball->getRadius() >= GetScreenWidth())
+    if (ballCenterPos.GetX() + ballRadius >= GetScreenWidth())
     {
         m_soundManager->playSound("score");
         m_changeFields = true;
         m_player->addScore();
         m_ball->reset();
     }
-    else if (m_ball->getPos().GetX() - m_ball->getRadius() <= 0)
+    else if (ballCenterPos.GetX() - ballRadius <= 0)
     {
         m_soundManager->playSound("score");
         m_changeFields = true;
@@ -52,7 +54,7 @@ void Field::update(float deltaTime)
     }
 
     // Ball collision with paddles
-    if (CheckCollisionCircleRec(m_ball->getPos(), m_ball->getRadius(), m_player->getCollisionRec()))
+    if (m_player->getCollisionRec().CheckCollision(ballCenterPos, ballRadius))
     {
         if (m_ball->getVelocity().GetX() < 0)
         {
@@ -61,7 +63,7 @@ void Field::update(float deltaTime)
         }
     };
 
-    if (CheckCollisionCircleRec(m_ball->getPos(), m_ball->getRadius(), m_computer->getCollisionRec()))
+    if (m_computer->getCollisionRec().CheckCollision(ballCenterPos, ballRadius))
     {
         if (m_ball->getVelocity().GetX() > 0)
         {
@@ -157,7 +159,7 @@ void PowerUpField::update(float deltaTime)
     for (auto itPowerup {m_powerups.begin()}; itPowerup != m_powerups.end();)
     {
         // If ball collides with powerup, activate powerup and remove from vector
-        if ((*itPowerup)->getCollisionRec().CheckCollision(m_ball->getPos(), m_ball->getRadius()))
+        if ((*itPowerup)->getCollisionRec().CheckCollision(m_ball->getCenterPos(), m_ball->getRadius()))
         {
             (*itPowerup)->onCollision(m_ball, m_soundManager);
             m_powerUpSpawner->decrementPowerupCount();
@@ -205,7 +207,7 @@ void ObstacleField::update(float deltaTime)
     // Handle collisions between ball and obstacle
     for (auto& obstacle : m_obstacles)
     {
-        if (obstacle.getCollisionRec().CheckCollision(m_ball->getPos(), m_ball->getRadius()))
+        if (obstacle.getCollisionRec().CheckCollision(m_ball->getCenterPos(), m_ball->getRadius()))
         {
             m_soundManager->playSound("wall_hit");
             m_ball->onCollisionObstacles(obstacle);
@@ -329,7 +331,7 @@ void LightsOutField::update(float deltaTime)
 
         // Draw a blank 'hole' in our texture around the ball
         float visionRadius {100.0f};
-        DrawCircle(m_ball->getPos().GetX(), m_ball->getPos().GetY(), visionRadius, BLANK);
+        DrawCircle(m_ball->getCenterPos().GetX(), m_ball->getCenterPos().GetY(), visionRadius, BLANK);
 
         // Go back to normal
         rlSetBlendMode(BLEND_ALPHA);

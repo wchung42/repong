@@ -295,6 +295,8 @@ GameplayScreen::GameplayScreen(
 {
     // Load game textures
     m_textureManager->loadTextures(std::vector<std::string> {
+        "./src/resources/textures/paddle.png",
+        "./src/resources/textures/ball.png",
         "./src/resources/textures/freeze.png",
         "./src/resources/textures/speed_up.png"
     });
@@ -308,9 +310,9 @@ GameplayScreen::GameplayScreen(
         "./src/resources/sfx/wall_hit.wav"
     });
 
-    m_player = std::make_unique<Player>();
-    m_computer = std::make_unique<Computer>();
-    m_ball = std::make_unique<Ball>(m_mt);
+    m_player = std::make_unique<Player>(m_textureManager->getTexture("paddle"));
+    m_computer = std::make_unique<Computer>(m_textureManager->getTexture("paddle"));
+    m_ball = std::make_unique<Ball>(m_textureManager->getTexture("ball"), m_mt);
     m_field = std::make_unique<Field>(m_player, m_computer, m_ball, m_soundManager);
 }
 

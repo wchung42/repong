@@ -8,13 +8,14 @@
 class Paddle
 {
 protected:
+	raylib::Texture2DUnmanaged m_texture;
 	raylib::Vector2 m_pos {};
 	float m_velocity {};
 	int m_width {};
 	int m_height {};
 	int m_score {};
 public:
-	Paddle();
+	Paddle(const raylib::Texture2DUnmanaged& texture);
 	~Paddle();
 	void update(float deltaTime);
 	void draw();
@@ -33,7 +34,7 @@ class Player : public Paddle
 private:
 	bool m_controlsInverted {};
 public:
-	Player();
+	Player(const raylib::Texture2DUnmanaged& texture);
 	~Player();
 	void update(float deltaTime);
 	void invertControls(bool invert) { m_controlsInverted = invert; }
@@ -44,7 +45,7 @@ public:
 class Computer : public Paddle
 {
 public:
-	Computer();
+	Computer(const raylib::Texture2DUnmanaged& texture);
 	~Computer();
 	void update(std::unique_ptr<Ball>& ball, float deltaTime);
 };

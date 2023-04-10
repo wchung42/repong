@@ -159,7 +159,6 @@
     <ClCompile Include="src\screen.cpp" />
     <ClCompile Include="src\sound_manager.cpp" />
     <ClCompile Include="src\texture_manager.cpp" />
-    <ClCompile Include="src\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ball.hpp" />
@@ -210,7 +209,6 @@
     <ClInclude Include="src\screen.hpp" />
     <ClInclude Include="src\sound_manager.hpp" />
     <ClInclude Include="src\texture_manager.hpp" />
-    <ClInclude Include="src\utils.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

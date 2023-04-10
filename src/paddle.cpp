@@ -1,10 +1,11 @@
 #include "paddle.hpp"
 
 // Paddle class function declarations
-Paddle::Paddle()
+Paddle::Paddle(const raylib::Texture2DUnmanaged& texture)
+	: m_texture(texture)
 {
-	m_width = 32;
-	m_height = m_width * 5;
+	m_width = m_texture.GetWidth();
+	m_height = m_texture.GetHeight();
 	m_velocity = 450.0f;
 }
 
@@ -20,28 +21,8 @@ void Paddle::update(float deltaTime)
 
 void Paddle::draw()
 {
-	// Outline width
-	float outlineWidth {2.0f};
-
-	// Draw outline rectangle
-	raylib::Rectangle outline {
-		m_pos.GetX() - outlineWidth,
-		m_pos.GetY() - outlineWidth,
-		static_cast<float>(m_width + outlineWidth),
-		static_cast<float>(m_height + outlineWidth),
-	};
-	raylib::Color outlineColor {0, 0, 0, 255};
-	outline.DrawRounded(1.0f, 4, outlineColor);
-
-	// Draw paddle rectangle
-	raylib::Rectangle rec {
-		m_pos.x,
-		m_pos.y,
-		static_cast<float>(m_width - outlineWidth), 
-		static_cast<float>(m_height - outlineWidth)
-	};
-	raylib::Color darkGreen {6, 48, 39, 255};
-	rec.DrawRounded(1.0f, 4, darkGreen);
+	// Draw paddle texture
+	m_texture.Draw(m_pos, WHITE);
 }
 
 raylib::Rectangle Paddle::getCollisionRec()
@@ -57,11 +38,12 @@ raylib::Rectangle Paddle::getCollisionRec()
 
 
 // Paddle class function declarations
-Player::Player()
+Player::Player(const raylib::Texture2DUnmanaged& texture)
+	: Paddle(texture)
 {
 	m_pos = raylib::Vector2 {
-				static_cast<float>(GetScreenWidth() * 0.02f),
-				static_cast<float>(GetScreenHeight() / 2 - m_height / 2)
+		static_cast<float>(GetScreenWidth() * 0.02f),
+		static_cast<float>(GetScreenHeight() / 2 - m_height / 2)
 	};
 }
 
@@ -90,7 +72,8 @@ void Player::update(float deltaTime)
 
 
 // Computer class function declarations
-Computer::Computer()
+Computer::Computer(const raylib::Texture2DUnmanaged& texture)
+	: Paddle(texture)
 {
 	m_pos = raylib::Vector2 {
 		static_cast<float>(GetScreenWidth() * 0.98f - m_width),

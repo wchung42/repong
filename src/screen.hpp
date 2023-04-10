@@ -4,7 +4,6 @@
 #include "include/raylib-cpp.hpp"
 #include "paddle.hpp"
 #include "field.hpp"
-#include "utils.hpp"
 #include "button.hpp"
 #include "texture_manager.hpp"
 #include "sound_manager.hpp"

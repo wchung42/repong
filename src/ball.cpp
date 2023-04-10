@@ -4,12 +4,16 @@
 #include "obstacle.hpp"
 #include <iostream>
 
-Ball::Ball(std::mt19937& mt)
-	: m_mt(mt)
+Ball::Ball(const raylib::Texture2DUnmanaged& texture, std::mt19937& mt)
+	: m_texture(texture), m_mt(mt)
 {
+	m_scale = 0.5f;
+	m_width = m_texture.GetWidth() * m_scale;
+	m_height = m_texture.GetHeight() * m_scale;
+	m_radius = m_width / 2; // Texture is square so width or height will work
 	m_pos = raylib::Vector2 {
-		static_cast<float>(GetScreenWidth() / 2),
-		static_cast<float>(GetScreenHeight() / 2)
+		static_cast<float>(GetScreenWidth() / 2 - m_radius),
+		static_cast<float>(GetScreenHeight() / 2 - m_radius)
 	};
 	this->setRandomVelocity();
 }
@@ -39,11 +43,7 @@ void Ball::update(float deltaTime)
 
 void Ball::draw()
 {
-	raylib::Color outlineColor {0, 0, 0, 255};
-	m_pos.DrawCircle(m_radius, outlineColor);
-	raylib::Color darkYellow {255, 204, 0, 255};
-	m_pos.DrawCircle(m_radius - 2.0f, darkYellow);
-	
+	m_texture.Draw(m_pos, 0.0f, m_scale, WHITE);
 }
 
 void Ball::reset()
@@ -54,6 +54,11 @@ void Ball::reset()
 	};
 	m_speed = m_baseSpeed;								// Reset ball speed
 	this->setRandomVelocity();
+}
+
+raylib::Vector2 Ball::getCenterPos()
+{
+	return raylib::Vector2 {m_pos.GetX() + m_radius, m_pos.GetY() + m_radius};
 }
 
 void Ball::setRandomVelocity()

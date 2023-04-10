@@ -8,25 +8,30 @@
 class Ball
 {
 private:
-	raylib::Vector2 m_pos {};			// Position
-	raylib::Vector2 m_velocity {};		// Velocity
-	int m_radius {12};					// Radius
-	float m_baseSpeed {420.0f};			// Base speed
-	float m_speed {m_baseSpeed};		// Current speed
+	raylib::Texture2DUnmanaged m_texture;	// Texture
+	raylib::Vector2 m_pos {};				// Position
+	raylib::Vector2 m_velocity {};			// Velocity
+	float m_width {};						
+	float m_height {};
+	float m_radius {};
+	float m_scale {};
+	float m_baseSpeed {420.0f};				// Base speed
+	float m_speed {m_baseSpeed};			// Current speed
 	std::mt19937& m_mt;
 
 	bool m_frozen {};
 	float m_freezeDuration {};
 	float m_freezeTimer {};
 public:
-	Ball(std::mt19937& mt);
+	Ball(const raylib::Texture2DUnmanaged& texture, std::mt19937& mt);
 	~Ball();
 	void update(float deltaTime);
 	void draw();
 	void reset();
 	raylib::Vector2 getPos() const { return m_pos; }
 	raylib::Vector2 getVelocity() const { return m_velocity; }
-	int getRadius() const { return m_radius; }
+	float getRadius() const { return m_radius; }
+	raylib::Vector2 getCenterPos();
 	float getSpeed() const { return m_speed; }
 	void setSpeed(float newSpeed) { m_speed = newSpeed; }
 	void setVelocity(raylib::Vector2 newVelocity) { m_velocity = newVelocity; }

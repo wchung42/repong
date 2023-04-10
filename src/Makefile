@@ -383,7 +383,8 @@ PROJECT_SOURCE_FILES ?= \
     paddle.cpp \
     powerup.cpp \
     screen.cpp \
-    utils.cpp \
+    texture_manager.cpp \
+    sound_manager.cpp
 
 # Define all object files from source files
 OBJS = $(patsubst %.c, %.o, $(PROJECT_SOURCE_FILES))
